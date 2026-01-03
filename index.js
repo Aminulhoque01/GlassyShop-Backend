@@ -10,6 +10,7 @@ dotenv.config();
 
 const app = express();
 
+// middlewares
 app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
@@ -20,18 +21,22 @@ app.use(
   })
 );
 
+// test route
 app.get("/", (req, res) => {
-  res.json({ message: "Server is running " + process.env.PORT });
+  res.json({ message: "Server is running 🚀" });
 });
 
+const PORT = process.env.PORT || 8080;
+
+// start server AFTER db connected
 const startServer = async () => {
   try {
     await connectDB();
-    app.listen(process.env.PORT, () => {
-      console.log("Server is running on port", process.env.PORT);
+    app.listen(PORT, () => {
+      console.log(`✅ Server running on port ${PORT}`);
     });
   } catch (error) {
-    console.error("Server startup error:", error);
+    console.error("❌ Server startup failed:", error.message);
   }
 };
 
