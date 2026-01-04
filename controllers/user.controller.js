@@ -1,3 +1,4 @@
+import { sendEmail } from "../config/emailService.js";
 import UserModel from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 
@@ -39,8 +40,13 @@ export async function registerUserController(request,response){
         const newUser= new UserModel(payload);
         await user.save()
 
-        // const verifyEmailUrl= `${process.env.FRONTEND_URL}/verify-email?code=${save?._id}`
-        
+        //send verifyCation email
+       const verifyEmail= await sendEmail({
+        sendTo:email,
+        subject:"Verify email from E-commerce App",
+        html:""
+       })
+
     } catch (error) {
         return response.status(500).json({
             message: error.message || error,
