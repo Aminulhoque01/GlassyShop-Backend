@@ -1,6 +1,6 @@
 import { sendEmail } from "../config/emailService.js";
 import UserModel from "../models/user.model.js";
-import bcrypt from "bcryptjs";
+
 
 
 
