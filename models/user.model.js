@@ -70,7 +70,13 @@ const userSchema=mongoose.Schema({
         type:String,
         enum:["ADMIN","USER"],
         default:"USER"
-    }
+    },
+    otp:{
+        type:String,
+    },
+    otpExpires:{
+        type:Date
+    },
 },{
     timestamps:true
 })
