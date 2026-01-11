@@ -1,112 +1,100 @@
+const VerificationEmail = (username, otp) => {
+  return `
+  <!DOCTYPE html>
+  <html lang="en">
+    <head>
+      <meta charset="UTF-8" />
+      <title>Email Verification</title>
 
+      <!-- Google Font -->
+      <link
+        href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap"
+        rel="stylesheet"
+      />
 
-const VerificationEmail=(username,otp)=>{
-     return `
-      <!DOCTYPE html>
-        <html lang="en">
-        <head>
-            <meta charset="UTF-8" />
-            <title>Enquiry Confirmation</title>
+      <style>
+        body {
+          font-family: "Roboto", Verdana, sans-serif;
+          background-color: #f4f6f8;
+          margin: 0;
+          padding: 0;
+        }
 
-            <!-- Google Font -->
-            <link
-            href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap"
-            rel="stylesheet"
-            />
+        .container {
+          max-width: 600px;
+          margin: 40px auto;
+          background: #ffffff;
+          padding: 30px;
+          border-radius: 8px;
+          box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+          text-align: center;
+        }
 
-            <style>
-            body {
-                font-family: "Roboto", Verdana, sans-serif;
-                background-color: #f4f6f8;
-                margin: 0;
-                padding: 0;
-            }
+        h1 {
+          color: #1f2937;
+          font-size: 24px;
+          margin-bottom: 15px;
+        }
 
-            .container {
-                max-width: 600px;
-                margin: 30px auto;
-                background: #ffffff;
-                padding: 25px;
-                border-radius: 8px;
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-            }
+        p {
+          color: #555;
+          font-size: 15px;
+          line-height: 1.6;
+        }
 
-            h1 {
-                color: #2c3e50;
-                font-size: 22px;
-                margin-bottom: 15px;
-            }
+        .otp-box {
+          margin: 25px 0;
+          padding: 15px;
+          background: #f1f5f9;
+          border-radius: 6px;
+          font-size: 26px;
+          letter-spacing: 6px;
+          font-weight: 700;
+          color: #2563eb;
+        }
 
-            p {
-                color: #555;
-                line-height: 1.6;
-                font-size: 15px;
-            }
+        .note {
+          font-size: 14px;
+          color: #666;
+        }
 
-            .info-box {
-                background: #f1f5f9;
-                padding: 15px;
-                border-radius: 6px;
-                margin: 20px 0;
-            }
+        .footer {
+          margin-top: 30px;
+          font-size: 13px;
+          color: #888;
+        }
+      </style>
+    </head>
 
-            .info-box p {
-                margin: 6px 0;
-                font-size: 14px;
-            }
+    <body>
+      <div class="container">
+        <h1>Email Verification 🔐</h1>
 
-            .footer {
-                margin-top: 30px;
-                font-size: 13px;
-                color: #888;
-                text-align: center;
-            }
+        <p>Hello <strong>${username}</strong>,</p>
 
-            .highlight {
-                color: #2563eb;
-                font-weight: 500;
-            }
-            </style>
-        </head>
+        <p>
+          Thank you for registering with us.  
+          Please use the following OTP to verify your email address:
+        </p>
 
-        <body>
-            <div class="container">
-            <h1>Enquiry Received ✅</h1>
+        <div class="otp-box">${otp}</div>
 
-            <p>
-                Hello <strong>{{name}}</strong>,
-            </p>
+        <p class="note">
+          This OTP is valid for <strong>10 minutes</strong>.  
+          Please do not share this code with anyone.
+        </p>
 
-            <p>
-                Thank you for contacting us. We have successfully received your enquiry.
-                Below are the details you submitted:
-            </p>
+        <p>
+          If you did not request this verification, please ignore this email.
+        </p>
 
-            <div class="info-box">
-                <p>
-                <strong>Product Name:</strong>
-                <span class="highlight">{{productName}}</span>
-                </p>
+        <div class="footer">
+          © 2026 Your Company Name. All rights reserved.
+        </div>
+      </div>
+    </body>
+  </html>
+  `;
+};
 
-                <p>
-                <strong>Product Specification:</strong><br />
-                {{productSpecification}}
-                </p>
-            </div>
-
-            <p>
-                Our team will review your enquiry and get back to you as soon as
-                possible.
-            </p>
-
-            <p>Thank you for choosing us!</p>
-
-            <div class="footer">
-                © 2026 Your Company Name. All rights reserved.
-            </div>
-            </div>
-        </body>
-        </html>
-
-    `;
-}
+export default VerificationEmail;
