@@ -48,6 +48,11 @@ export async function registerUserController(request, response) {
       text:"",
       html: VerificationEmail(name, verifyCode),
     });
+    
+    token=JsonWebTokenError.sign({email:user.email, id:user._id},
+      process.env.JSON_WEB_TOKEN_SECRET_KEY
+    )
+
   } catch (error) {
     return response.status(500).json({
       message: error.message || error,

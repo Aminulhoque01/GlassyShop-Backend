@@ -27,4 +27,4 @@ async function sendEmail(to, subject,text, html){
     }
 }
 
-module.exports={sendEmail}
+export default sendEmail;
