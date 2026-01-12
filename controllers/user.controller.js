@@ -51,7 +51,13 @@ export async function registerUserController(request, response) {
     
     token=JsonWebTokenError.sign({email:user.email, id:user._id},
       process.env.JSON_WEB_TOKEN_SECRET_KEY
-    )
+    );
+
+    return res.status(200).json({
+      success:true,
+      message:"User register successfully ! Please verify your email",
+      token:token,
+    })
 
   } catch (error) {
     return response.status(500).json({
