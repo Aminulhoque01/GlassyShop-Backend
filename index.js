@@ -22,7 +22,7 @@ app.use(
   })
 );
 
-// test route
+// test route get api
 app.get("/", (req, res) => {
   res.json({ message: "Server is running 🚀" });
 });
