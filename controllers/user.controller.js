@@ -35,7 +35,7 @@ export async function registerUserController(request, response) {
       email,
       password: hashPassword,
       otp: verifyCode,
-      otpExpires: Date.now() + 10 * 60 * 1000, // 10 minutes
+      otpExpires: Date.now() + 10 * 60 * 1000,  
     });
 
     await sendEmail({
