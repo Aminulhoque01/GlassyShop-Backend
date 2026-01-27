@@ -9,38 +9,22 @@ import userRouter from "./route/user.route.js";
 
 dotenv.config();
 
+ 
 const app = express();
-
-// middlewares
 app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
 app.use(morgan("dev"));
-app.use(
-  helmet({
-    crossOriginResourcePolicy: false,
-  })
-);
+app.use(helmet({ crossOriginResourcePolicy: false }));
+console.log(process.env.EMAIL, process.env.EMAIL_PASS);
 
-// test route get api
-app.get("/", (req, res) => {
-  res.json({ message: "Server is running 🚀" });
-});
 
-app.use('/api/user', userRouter)
+app.get("/", (req, res) => res.json({ message: "Server is running 🚀" }));
+app.use("/api/user", userRouter);
 
 const PORT = process.env.PORT || 8080;
-
- 
 const startServer = async () => {
-  try {
-    await connectDB();
-    app.listen(PORT, () => {
-      console.log(`✅ Server running on port ${PORT}`);
-    });
-  } catch (error) {
-    console.error("❌ Server startup failed:", error.message);
-  }
+  await connectDB();
+  app.listen(PORT, () => console.log(`✅ Server running on ${PORT}`));
 };
-
 startServer();
