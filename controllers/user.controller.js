@@ -90,15 +90,15 @@ export async function verifyEmailController(request,response){
       user.otp=null;
       user.otpExpires=null;
       await user.save();
-      return res.status(200).json({success:true, message:"Email verified successfully"})
+      return response.status(200).json({success:true, message:"Email verified successfully"})
     }else if(!isCodeValid){
-      return res.status(400).json({success:false,message:"Invalid OTP"})
+      return response.status(400).json({success:false,message:"Invalid OTP"})
     }else{
-      return res.status(400).json({success:false, message:"OTP expired"})
+      return response.status(400).json({success:false, message:"OTP expired"})
     }
 
   } catch (error) {
-    return res.status(500).json({
+    return response.status(500).json({
       message: error.message,
       error: true,
       success: false,
