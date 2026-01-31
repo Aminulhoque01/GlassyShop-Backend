@@ -105,3 +105,15 @@ export async function verifyEmailController(request,response){
     });
   }
 }
+
+export async function loginUserController(request, response){
+  try {
+    
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+      error: true,
+      success: false,
+    });
+  }
+}
