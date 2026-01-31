@@ -3,6 +3,8 @@ import jwt from "jsonwebtoken";
 import { sendEmail } from "../config/emailService.js";
 import VerificationEmail from "../helper/sendVerificationEmail.js";
 import UserModel from "../models/user.model.js";
+import generatedAccessToken from "../utils/generatedAccessToken.js";
+import generatedRefreshToken from "../utils/generatedRefreshToken.js";
 
 export async function registerUserController(req, res) {
   try {
@@ -108,7 +110,48 @@ export async function verifyEmailController(request,response){
 
 export async function loginUserController(request, response){
   try {
+    const {email, password}= request.body;
+    const user = await UserModel.findOne({email:email});
+    if(!user){
+      return response.status(400).json({
+        message:"user not found",
+        error:true,
+        success:false
+      })
+    }
+
+    if(user.status !== "Active"){
+      response.status(400).json({
+        message:"contact to admin",
+        error:true,
+        success:false
+      })
+    }
+
+    const checkPassword = await bcryptjs.compare(password, user.password)
+    if(!checkPassword){
+       response.status(400).json({
+        message:"check your password",
+        error:true,
+        success:false
+      })
+    }
+
+    const accessToken= await generatedAccessToken(user._id);
+    const refreshToken= await generatedRefreshToken(user._id);
     
+    const updateUser = await UserModel.findByIdAndUpdate(user?._id,{
+      last_login_date:new Date(),
+    })
+
+    const cookiesOption={
+      httpOnly:true,
+      secure:true,
+      sameSite:"None"
+    }
+   response.cookie("accessToken", accessToken,cookiesOption);
+   response.cookie("refreshToken", refreshToken,cookiesOption);
+
   } catch (error) {
     return res.status(500).json({
       message: error.message,
