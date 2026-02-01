@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { loginUserController, logoutController, registerUserController, verifyEmailController } from "../controllers/user.controller.js";
+import auth from "../middleware/auth.js";
 
 
 const userRouter= Router();
@@ -7,6 +8,6 @@ const userRouter= Router();
 userRouter.post('/register', registerUserController);
 userRouter.post("/verify", verifyEmailController)
 userRouter.post("/login", loginUserController)
-userRouter.post("/logout", logoutController)
+userRouter.post("/logout", auth, logoutController)
 
 export default userRouter;
