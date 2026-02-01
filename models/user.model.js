@@ -109,6 +109,10 @@ const userSchema = new mongoose.Schema({
     type: Number,
     default: null,
   },
+  access_token:{
+     type: String,
+    default: "",
+  },
   refresh_token: {
     type: String,
     default: "",
