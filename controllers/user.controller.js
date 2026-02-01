@@ -5,6 +5,7 @@ import VerificationEmail from "../helper/sendVerificationEmail.js";
 import UserModel from "../models/user.model.js";
 import generatedAccessToken from "../utils/generatedAccessToken.js";
 import generatedRefreshToken from "../utils/generatedRefreshToken.js";
+import { request } from "express";
 
 export async function registerUserController(req, res) {
   try {
@@ -152,6 +153,8 @@ export async function loginUserController(request, response){
    response.cookie("accessToken", accessToken,cookiesOption);
    response.cookie("refreshToken", refreshToken,cookiesOption);
    
+    
+
    return response.json({
     message:"Login successfully",
     error: false,
@@ -162,10 +165,43 @@ export async function loginUserController(request, response){
     }
    })
   } catch (error) {
-    return res.status(500).json({
+    return response.status(500).json({
       message: error.message,
       error: true,
       success: false,
     });
   }
+}
+
+
+export async function logoutController(request, response){
+  try {
+     const userid= request.userId
+     const cookiesOption={
+      httpOnly: true,
+      secure:true,
+      sameSite: "None"
+     }
+
+     response.clearCookie("accessToken", cookiesOption);
+     response.clearCookie("refreshToken", cookiesOption);
+
+     const removeRefreshToken = await UserModel.findByIdAndUpdate(userid,{
+      refresh_token:""
+     })
+
+     return response.json({
+      message:"Logout successfully",
+      error:false,
+      success:true,
+     })
+
+  } catch (error) {
+    return response.status(500).json({
+      message: error.message,
+      error: true,
+      success: false,
+    });
+  }
+
 }
