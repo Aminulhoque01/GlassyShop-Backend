@@ -151,7 +151,16 @@ export async function loginUserController(request, response){
     }
    response.cookie("accessToken", accessToken,cookiesOption);
    response.cookie("refreshToken", refreshToken,cookiesOption);
-
+   
+   return response.json({
+    message:"Login successfully",
+    error: false,
+    success: true,
+    data:{
+      accessToken,
+      refreshToken,
+    }
+   })
   } catch (error) {
     return res.status(500).json({
       message: error.message,
