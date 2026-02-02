@@ -216,44 +216,7 @@ export async function logoutController(request, response){
 
 }
 
-//upload avatar
-// var imagesArr =[]
-// export  async function userAvatarController(request,response){
-//  try {
-//     imagesArr=[];
-//     const userId = request.userId;
-//     const image = request.file;
-//     for(let i = 0; i < request.files.length; i++){
-//       const options = {
-//         use_filename: true,
-//         unique_filename:true,
-//         overwrite:false,
-//       }
 
-//       const img= await cloudinary.uploader.upload(
-//         image[i].path,
-//         options,
-//         function(error, result){
-//           imagesArr.push(result.secure_url);
-//           fs.unlinkSync(`uploads/${request.files[i].filename}`);
-//           console.log(request.files[i].filename)
-//         }
-//       )
-//     }
-
-//     return response.status(200).json({
-//       _id: userId,
-//       avatar:imagesArr[0]
-//     })
-
-//  } catch (error) {
-//     return response.status(500).json({
-//       message: error.message,
-//       error: true,
-//       success: false,
-//     });
-//  }
-// }
 
 
 var imagesArr =[]
