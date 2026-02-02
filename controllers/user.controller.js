@@ -236,7 +236,7 @@ export async function userAvatarController(request, response) {
 
       imagesArr.push(result.secure_url);
 
-      fs.unlinkSync(file.path); // delete local file
+      fs.unlinkSync(file.path);  
     }
 
     return response.status(200).json({
