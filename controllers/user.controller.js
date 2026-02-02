@@ -205,3 +205,17 @@ export async function logoutController(request, response){
   }
 
 }
+
+//upload avatar
+
+export  async function userAvatarController(request,response){
+ try {
+  
+ } catch (error) {
+    return response.status(500).json({
+      message: error.message,
+      error: true,
+      success: false,
+    });
+ }
+}
