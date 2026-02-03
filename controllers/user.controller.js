@@ -259,6 +259,7 @@ export async function removeImageFromCloudinary(request, response) {
   try {
     const imgUrl = request.query.img;
     const urlArr =imgUrl.split("/")
+    const image = urlArr[urlArr.length - 1]
   } catch (error) {
     return response.status(500).json({
       message: error.message,
