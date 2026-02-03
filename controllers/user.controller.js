@@ -224,6 +224,16 @@ export async function userAvatarController(request, response) {
   try {
     const userId = request.userId;
     const imagesArr = [];
+    
+    const user = await UserModel.findOne({_id:userId});
+
+    if(!user){
+      return response.status(500).json({
+        message:"User not found",
+        error:true,
+        success:false,
+      })
+    }
 
     for (let i = 0; i < request.files.length; i++) {
       const file = request.files[i];
@@ -238,6 +248,8 @@ export async function userAvatarController(request, response) {
 
       fs.unlinkSync(file.path);  
     }
+    user.avatar= imagesArr[0];
+    await user.save();
 
     return response.status(200).json({
       _id: userId,
