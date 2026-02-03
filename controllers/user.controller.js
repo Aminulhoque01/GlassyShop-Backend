@@ -257,23 +257,26 @@ export async function userAvatarController(request, response) {
 
 export async function removeImageFromCloudinary(request, response) {
   try {
-    const imgUrl = request.query.img;
-    const urlArr =imgUrl.split("/")
-    const image = urlArr[urlArr.length - 1];
-    const imageName= image.split(".")[0];
+    const imgUrl = request.query.image;
 
-    if(imageName){
-      const res = await cloudinary.uploader.destroy(
-        imageName,
-        (error, result)=>{
-          console.log(error)
-        }
-      );
-
-      if(res){
-        response.status(200).send(res)
-      }
+    if (!imgUrl) {
+      return response.status(400).json({
+        message: "Image URL required",
+        error: true,
+      });
     }
+
+    const urlArr = imgUrl.split("/");
+    const image = urlArr[urlArr.length - 1];
+    const publicId = image.split(".")[0];
+
+    const result = await cloudinary.uploader.destroy(publicId);
+
+    return response.status(200).json({
+      success: true,
+      result,
+    });
+
   } catch (error) {
     return response.status(500).json({
       message: error.message,
