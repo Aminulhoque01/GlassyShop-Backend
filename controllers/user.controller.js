@@ -259,7 +259,21 @@ export async function removeImageFromCloudinary(request, response) {
   try {
     const imgUrl = request.query.img;
     const urlArr =imgUrl.split("/")
-    const image = urlArr[urlArr.length - 1]
+    const image = urlArr[urlArr.length - 1];
+    const imageName= image.split(".")[0];
+
+    if(imageName){
+      const res = await cloudinary.uploader.destroy(
+        imageName,
+        (error, result)=>{
+          console.log(error)
+        }
+      );
+
+      if(res){
+        response.status(200).send(res)
+      }
+    }
   } catch (error) {
     return response.status(500).json({
       message: error.message,
