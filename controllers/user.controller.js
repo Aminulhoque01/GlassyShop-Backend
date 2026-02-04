@@ -220,57 +220,114 @@ export async function logoutController(request, response){
 
 
  
+// export async function userAvatarController(request, response) {
+//   try {
+//     const userId = request.userId;
+//     const imagesArr = [];
+    
+//     const user = await UserModel.findOne({_id:userId});
+//     const urlArr = user.avatar;
+//     const image = urlArr[urlArr.length-1];
+
+//     const imageName = image.split(".")[0];
+
+//     if(imageName){
+//       const res= await cloudinary.uploader.destroy(
+//         imageName,
+//         (error, result)=>{
+//           console.log(error, res);
+//         }
+//       );
+
+//       if(res){
+//         response.status(200).send(res)
+//       }
+//     }
+
+//     if(!user){
+//       return response.status(500).json({
+//         message:"User not found",
+//         error:true,
+//         success:false,
+//       })
+//     }
+
+//     for (let i = 0; i < request.files.length; i++) {
+//       const file = request.files[i];
+
+//       const result = await cloudinary.uploader.upload(file.path, {
+//         use_filename: true,
+//         unique_filename: true,
+//         overwrite: false,
+//       });
+
+//       imagesArr.push(result.secure_url);
+
+//       fs.unlinkSync(file.path);  
+//     }
+//     user.avatar= imagesArr[0];
+//     await user.save();
+
+//     return response.status(200).json({
+//       _id: userId,
+//       avatar: imagesArr[0],
+//     });
+
+//   } catch (error) {
+//     return response.status(500).json({
+//       message: error.message,
+//       error: true,
+//       success: false,
+//     });
+//   }
+// }
+
+
 export async function userAvatarController(request, response) {
   try {
     const userId = request.userId;
-    const imagesArr = [];
-    
-    const user = await UserModel.findOne({_id:userId});
-    const userAvatar = user.avatar;
-    const image = urlArr[urlArr.length-1];
 
-    const imageName = image.split(".")[0];
+    const user = await UserModel.findById(userId);
 
-    if(imageName){
-      const res= await cloudinary.uploader.destroy(
-        imageName,
-        (error, result)=>{
-          console.log(error, res);
-        }
-      );
-
-      if(res){
-        response.status(200).send(res)
-      }
-    }
-
-    if(!user){
-      return response.status(500).json({
-        message:"User not found",
-        error:true,
-        success:false,
-      })
-    }
-
-    for (let i = 0; i < request.files.length; i++) {
-      const file = request.files[i];
-
-      const result = await cloudinary.uploader.upload(file.path, {
-        use_filename: true,
-        unique_filename: true,
-        overwrite: false,
+    if (!user) {
+      return response.status(404).json({
+        message: "User not found",
+        error: true,
+        success: false,
       });
-
-      imagesArr.push(result.secure_url);
-
-      fs.unlinkSync(file.path);  
     }
-    user.avatar= imagesArr[0];
+
+    /* -------------------------
+       DELETE OLD IMAGE FIRST
+    --------------------------*/
+    if (user.avatar) {
+      const parts = user.avatar.split("/");
+      const fileName = parts[parts.length - 1];
+      const publicId = fileName.split(".")[0];
+
+      await cloudinary.uploader.destroy(publicId);
+    }
+
+    /* -------------------------
+       UPLOAD NEW IMAGE
+    --------------------------*/
+    const file = request.files[0];
+
+    const result = await cloudinary.uploader.upload(file.path, {
+      use_filename: true,
+      unique_filename: true,
+      overwrite: false,
+    });
+
+    fs.unlinkSync(file.path);
+
+    user.avatar = result.secure_url;
     await user.save();
 
     return response.status(200).json({
       _id: userId,
-      avatar: imagesArr[0],
+      avatar: result.secure_url,
+      success: true,
     });
 
   } catch (error) {
@@ -281,6 +338,7 @@ export async function userAvatarController(request, response) {
     });
   }
 }
+
 
 
 
