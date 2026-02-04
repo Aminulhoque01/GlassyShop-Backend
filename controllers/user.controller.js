@@ -376,7 +376,38 @@ export async function removeImageFromCloudinary(request, response) {
 
 export async function updateUserDetails(request, response){
   try {
-    
+    const userId = request.userId // auth.middleware
+    const {name, email, mobile,password}= request.body;
+    const userExist = await UserModel.findById(userId);
+
+    let verifyCode="";
+
+    if(email){
+      verifyCode = Math.floor(100000 + Math.random()*900000).toString();
+    }
+
+    let hashPassword = ""
+
+    if(password){
+      const salt = await bcryptjs.genSalt(10)
+      hashPassword = await bcryptjs.hash(password, salt)
+    }else{
+      hashPassword = userExist.password;
+    }
+
+    const updateUser = await UserModel.findByIdAndUpdate(userId,{
+      name:name,
+      mobile:mobile,
+      email:email,
+      verify_email: email ? false : true,
+      password:hashPassword,
+      otp: verifyCode !== " "? verifyCode:null,
+      otpExpires:verifyCode !==""?Date.now()+600000:""
+    }, {
+      new: true,
+    })
+
+
   } catch (error) {
     return response.status(500).json({
       message: error.message,
