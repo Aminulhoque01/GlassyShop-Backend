@@ -407,7 +407,18 @@ export async function updateUserDetails(request, response){
       new: true,
     })
 
+    if(!userExist){
+      return res.status(400).send('The user cannot be updated!')
+    }
 
+    return response.json({
+      message: "User Updated successfully",
+      error:false,
+      success: true,
+      user: updateUser,
+    });
+
+    
   } catch (error) {
     return response.status(500).json({
       message: error.message,
