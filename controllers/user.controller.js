@@ -450,7 +450,11 @@ export async function forgotPassword(request, response){
       })
     };
 
-    let verifyCode= "",
+    let verifyCode=  Math.floor(100000 + Math.random()*900000).toString();
+     
+
+    user.otp=verifyCode;
+    user.otpExpires= Date.now() + 600000;
 
   } catch (error) {
     return response.status(500).json({
