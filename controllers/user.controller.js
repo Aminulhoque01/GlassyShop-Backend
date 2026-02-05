@@ -139,6 +139,14 @@ export async function loginUserController(request, response){
       })
     }
 
+    if(user.verify_email !== true){
+      response.status(400).json({
+        message:"Your Email is not verify yet please verify your email first",
+        error:true,
+        success:false
+      })
+    }
+
     const checkPassword = await bcryptjs.compare(password, user.password)
     if(!checkPassword){
        response.status(400).json({
@@ -418,7 +426,7 @@ export async function updateUserDetails(request, response){
       user: updateUser,
     });
 
-    
+
   } catch (error) {
     return response.status(500).json({
       message: error.message,

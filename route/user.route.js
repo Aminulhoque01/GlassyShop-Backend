@@ -12,6 +12,6 @@ userRouter.post("/login", loginUserController)
 userRouter.post("/logout", auth, logoutController)
 userRouter.put("/user_avatar", auth, upload.array("avatar",5), userAvatarController)
 userRouter.delete('/deleteImage', auth, removeImageFromCloudinary);
-userRouter.post('/:id', auth, updateUserDetails)
+userRouter.put('/:id', auth, updateUserDetails)
 
 export default userRouter;
