@@ -441,14 +441,16 @@ export async function forgotPassword(request, response){
   try {
     
     const {email} = request.body;
-    const user = await UserModel.findOne({email});
+    const user = await UserModel.findOne({email:email});
     if(!user){
       return response.status(400).json({
         message:"Email not available",
         error:true,
         success:true,
       })
-    }
+    };
+
+    let verifyCode= "",
 
   } catch (error) {
     return response.status(500).json({
