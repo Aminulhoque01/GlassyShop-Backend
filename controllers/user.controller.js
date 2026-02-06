@@ -455,14 +455,21 @@ export async function forgotPassword(request, response){
 
     user.otp=verifyCode;
     user.otpExpires= Date.now() + 600000;
+   
+    await user.save(0);
 
     await sendEmailFun({
       sendTo:email,
       subject: "Verify email from Ecommerce APP",
       text:'',
-      html:VerificationEmail(name,verifyCode)
+      html:VerificationEmail(user?.name,verifyCode)
+    });
+    
+    return response.json({
+      message:"Check your email",
+      error:false,
+      success:true,
     })
-
 
   } catch (error) {
     return response.status(500).json({
