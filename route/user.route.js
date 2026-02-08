@@ -13,6 +13,6 @@ userRouter.post("/logout", auth, logoutController)
 userRouter.put("/user_avatar", auth, upload.array("avatar",5), userAvatarController)
 userRouter.delete('/deleteImage', auth, removeImageFromCloudinary);
 userRouter.put('/:id', auth, updateUserDetails)
-userRouter.post('/forgot-password', auth, forgotPassword)
+userRouter.post('/forgot-password',  forgotPassword)
 
 export default userRouter;

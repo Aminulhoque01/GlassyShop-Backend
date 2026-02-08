@@ -9,6 +9,7 @@ import { request } from "express";
 
 import {v2 as cloudinary} from "cloudinary";
 import fs from "fs";
+import sendEmailFun from "../config/sendEmail.js";
 
 cloudinary.config({
   cloud_name:process.env.cloudinary_Config_Cloud_Name,
@@ -452,11 +453,16 @@ export async function forgotPassword(request, response){
 
     let verifyCode=  Math.floor(100000 + Math.random()*900000).toString();
      
+    const updateUser = await UserModel.findByIdAndUpdate(user?._id,{
+       
+      otp: verifyCode !== " "? verifyCode:null,
+      otpExpires:verifyCode !==""?Date.now()+600000:""
+    }, {
+      new: true,
+    })
 
-    user.otp=verifyCode;
-    user.otpExpires= Date.now() + 600000;
+     
    
-    await user.save(0);
 
     await sendEmailFun({
       sendTo:email,
