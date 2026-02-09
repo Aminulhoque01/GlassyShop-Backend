@@ -7,16 +7,16 @@ import generatedAccessToken from "../utils/generatedAccessToken.js";
 import generatedRefreshToken from "../utils/generatedRefreshToken.js";
 import { request } from "express";
 
-import {v2 as cloudinary} from "cloudinary";
+import { v2 as cloudinary } from "cloudinary";
 import fs from "fs";
 import sendEmailFun from "../config/sendEmail.js";
 
 cloudinary.config({
-  cloud_name:process.env.cloudinary_Config_Cloud_Name,
+  cloud_name: process.env.cloudinary_Config_Cloud_Name,
   api_key: process.env.cloudinary_Config_api_key,
-  api_secret:process.env.cloudinary_Config_api_secret,
-  secure:true,
-})
+  api_secret: process.env.cloudinary_Config_api_secret,
+  secure: true,
+});
 
 export async function registerUserController(req, res) {
   try {
@@ -81,36 +81,38 @@ export async function registerUserController(req, res) {
   }
 }
 
-
-
-export async function verifyEmailController(request,response){
+export async function verifyEmailController(request, response) {
   try {
-    const {email, otp} = request.body;
-    const user = await UserModel.findOne({email:email});
+    const { email, otp } = request.body;
+    const user = await UserModel.findOne({ email: email });
 
-    if(!user){
+    if (!user) {
       return response.status(400).json({
-        message:"user not found",
-        error:true,
-        success:false
-      })
+        message: "user not found",
+        error: true,
+        success: false,
+      });
     }
-    
-    const isCodeValid= user.otp===otp;
+
+    const isCodeValid = user.otp === otp;
     const isNotExpired = user.otpExpires > Date.now();
 
-    if(isCodeValid && isNotExpired){
-      user.verify_email = true,
-      user.otp=null;
-      user.otpExpires=null;
+    if (isCodeValid && isNotExpired) {
+      ((user.verify_email = true), (user.otp = null));
+      user.otpExpires = null;
       await user.save();
-      return response.status(200).json({success:true, message:"Email verified successfully"})
-    }else if(!isCodeValid){
-      return response.status(400).json({success:false,message:"Invalid OTP"})
-    }else{
-      return response.status(400).json({success:false, message:"OTP expired"})
+      return response
+        .status(200)
+        .json({ success: true, message: "Email verified successfully" });
+    } else if (!isCodeValid) {
+      return response
+        .status(400)
+        .json({ success: false, message: "Invalid OTP" });
+    } else {
+      return response
+        .status(400)
+        .json({ success: false, message: "OTP expired" });
     }
-
   } catch (error) {
     return response.status(500).json({
       message: error.message,
@@ -120,101 +122,67 @@ export async function verifyEmailController(request,response){
   }
 }
 
-export async function loginUserController(request, response){
+export async function loginUserController(request, response) {
   try {
-    const {email, password}= request.body;
-    const user = await UserModel.findOne({email:email});
-    if(!user){
+    const { email, password } = request.body;
+    const user = await UserModel.findOne({ email: email });
+    if (!user) {
       return response.status(400).json({
-        message:"user not found",
-        error:true,
-        success:false
-      })
+        message: "user not found",
+        error: true,
+        success: false,
+      });
     }
 
-    if(user.status !== "Active"){
+    if (user.status !== "Active") {
       response.status(400).json({
-        message:"contact to admin",
-        error:true,
-        success:false
-      })
+        message: "contact to admin",
+        error: true,
+        success: false,
+      });
     }
 
-    if(user.verify_email !== true){
+    if (user.verify_email !== true) {
       response.status(400).json({
-        message:"Your Email is not verify yet please verify your email first",
-        error:true,
-        success:false
-      })
+        message: "Your Email is not verify yet please verify your email first",
+        error: true,
+        success: false,
+      });
     }
 
-    const checkPassword = await bcryptjs.compare(password, user.password)
-    if(!checkPassword){
-       response.status(400).json({
-        message:"check your password",
-        error:true,
-        success:false
-      })
+    const checkPassword = await bcryptjs.compare(password, user.password);
+    if (!checkPassword) {
+      response.status(400).json({
+        message: "check your password",
+        error: true,
+        success: false,
+      });
     }
 
-    const accessToken= await generatedAccessToken(user._id);
-    const refreshToken= await generatedRefreshToken(user._id);
-    
-    const updateUser = await UserModel.findByIdAndUpdate(user?._id,{
-      last_login_date:new Date(),
-    })
+    const accessToken = await generatedAccessToken(user._id);
+    const refreshToken = await generatedRefreshToken(user._id);
 
-    const cookiesOption={
-      httpOnly:true,
-      secure:true,
-      sameSite:"None"
-    }
-   response.cookie("accessToken", accessToken,cookiesOption);
-   response.cookie("refreshToken", refreshToken,cookiesOption);
-   
-    
-
-   return response.json({
-    message:"Login successfully",
-    error: false,
-    success: true,
-    data:{
-      accessToken,
-      refreshToken,
-    }
-   })
-  } catch (error) {
-    return response.status(500).json({
-      message: error.message,
-      error: true,
-      success: false,
+    const updateUser = await UserModel.findByIdAndUpdate(user?._id, {
+      last_login_date: new Date(),
     });
-  }
-}
 
-
-export async function logoutController(request, response){
-  try {
-     const userid= request.userId
-     const cookiesOption={
+    const cookiesOption = {
       httpOnly: true,
-      secure:true,
-      sameSite: "None"
-     }
+      secure: true,
+      sameSite: "None",
+    };
+    response.cookie("accessToken", accessToken, cookiesOption);
+    response.cookie("refreshToken", refreshToken, cookiesOption);
 
-     response.clearCookie("accessToken", cookiesOption);
-     response.clearCookie("refreshToken", cookiesOption);
-
-     const removeRefreshToken = await UserModel.findByIdAndUpdate(userid,{
-      refresh_token:""
-     })
-
-     return response.json({
-      message:"Logout successfully",
-      error:false,
-      success:true,
-     })
-
+    return response.json({
+      message: "Login successfully",
+      error: false,
+      success: true,
+      data: {
+        accessToken,
+        refreshToken,
+      },
+    });
   } catch (error) {
     return response.status(500).json({
       message: error.message,
@@ -222,18 +190,43 @@ export async function logoutController(request, response){
       success: false,
     });
   }
-
 }
 
+export async function logoutController(request, response) {
+  try {
+    const userid = request.userId;
+    const cookiesOption = {
+      httpOnly: true,
+      secure: true,
+      sameSite: "None",
+    };
 
+    response.clearCookie("accessToken", cookiesOption);
+    response.clearCookie("refreshToken", cookiesOption);
 
+    const removeRefreshToken = await UserModel.findByIdAndUpdate(userid, {
+      refresh_token: "",
+    });
 
- 
+    return response.json({
+      message: "Logout successfully",
+      error: false,
+      success: true,
+    });
+  } catch (error) {
+    return response.status(500).json({
+      message: error.message,
+      error: true,
+      success: false,
+    });
+  }
+}
+
 // export async function userAvatarController(request, response) {
 //   try {
 //     const userId = request.userId;
 //     const imagesArr = [];
-    
+
 //     const user = await UserModel.findOne({_id:userId});
 //     const urlArr = user.avatar;
 //     const image = urlArr[urlArr.length-1];
@@ -272,7 +265,7 @@ export async function logoutController(request, response){
 
 //       imagesArr.push(result.secure_url);
 
-//       fs.unlinkSync(file.path);  
+//       fs.unlinkSync(file.path);
 //     }
 //     user.avatar= imagesArr[0];
 //     await user.save();
@@ -290,7 +283,6 @@ export async function logoutController(request, response){
 //     });
 //   }
 // }
-
 
 export async function userAvatarController(request, response) {
   try {
@@ -338,7 +330,6 @@ export async function userAvatarController(request, response) {
       avatar: result.secure_url,
       success: true,
     });
-
   } catch (error) {
     return response.status(500).json({
       message: error.message,
@@ -347,9 +338,6 @@ export async function userAvatarController(request, response) {
     });
   }
 }
-
-
-
 
 export async function removeImageFromCloudinary(request, response) {
   try {
@@ -372,7 +360,6 @@ export async function removeImageFromCloudinary(request, response) {
       success: true,
       result,
     });
-
   } catch (error) {
     return response.status(500).json({
       message: error.message,
@@ -382,52 +369,53 @@ export async function removeImageFromCloudinary(request, response) {
   }
 }
 
-
-export async function updateUserDetails(request, response){
+export async function updateUserDetails(request, response) {
   try {
-    const userId = request.userId // auth.middleware
-    const {name, email, mobile,password}= request.body;
+    const userId = request.userId; // auth.middleware
+    const { name, email, mobile, password } = request.body;
     const userExist = await UserModel.findById(userId);
 
-    let verifyCode="";
+    let verifyCode = "";
 
-    if(email){
-      verifyCode = Math.floor(100000 + Math.random()*900000).toString();
+    if (email) {
+      verifyCode = Math.floor(100000 + Math.random() * 900000).toString();
     }
 
-    let hashPassword = ""
+    let hashPassword = "";
 
-    if(password){
-      const salt = await bcryptjs.genSalt(10)
-      hashPassword = await bcryptjs.hash(password, salt)
-    }else{
+    if (password) {
+      const salt = await bcryptjs.genSalt(10);
+      hashPassword = await bcryptjs.hash(password, salt);
+    } else {
       hashPassword = userExist.password;
     }
 
-    const updateUser = await UserModel.findByIdAndUpdate(userId,{
-      name:name,
-      mobile:mobile,
-      email:email,
-      verify_email: email ? false : true,
-      password:hashPassword,
-      otp: verifyCode !== " "? verifyCode:null,
-      otpExpires:verifyCode !==""?Date.now()+600000:""
-    }, {
-      new: true,
-    })
+    const updateUser = await UserModel.findByIdAndUpdate(
+      userId,
+      {
+        name: name,
+        mobile: mobile,
+        email: email,
+        verify_email: email ? false : true,
+        password: hashPassword,
+        otp: verifyCode !== " " ? verifyCode : null,
+        otpExpires: verifyCode !== "" ? Date.now() + 600000 : "",
+      },
+      {
+        new: true,
+      },
+    );
 
-    if(!userExist){
-      return res.status(400).send('The user cannot be updated!')
+    if (!userExist) {
+      return res.status(400).send("The user cannot be updated!");
     }
 
     return response.json({
       message: "User Updated successfully",
-      error:false,
+      error: false,
       success: true,
       user: updateUser,
     });
-
-
   } catch (error) {
     return response.status(500).json({
       message: error.message,
@@ -437,10 +425,9 @@ export async function updateUserDetails(request, response){
   }
 }
 
-
 // export async function forgotPassword(request, response){
 //   try {
-    
+
 //     const {email} = request.body;
 //     const user = await UserModel.findOne({email:email});
 //     if(!user){
@@ -452,17 +439,14 @@ export async function updateUserDetails(request, response){
 //     };
 
 //     let verifyCode=  Math.floor(100000 + Math.random()*900000).toString();
-     
+
 //     const updateUser = await UserModel.findByIdAndUpdate(user?._id,{
-       
+
 //       otp: verifyCode !== " "? verifyCode:null,
 //       otpExpires:verifyCode !==""?Date.now()+600000:""
 //     }, {
 //       new: true,
 //     })
-
-     
-   
 
 //     await sendEmail({
 //       sendTo:email,
@@ -470,7 +454,7 @@ export async function updateUserDetails(request, response){
 //       text:'',
 //       html:VerificationEmail(user?.name,verifyCode)
 //     });
-    
+
 //     return response.json({
 //       message:"Check your email",
 //       error:false,
@@ -485,8 +469,6 @@ export async function updateUserDetails(request, response){
 //     });
 //   }
 // }
-
-
 
 export async function forgotPassword(request, response) {
   try {
@@ -509,9 +491,7 @@ export async function forgotPassword(request, response) {
       otpExpires: Date.now() + 10 * 60 * 1000, // 10 minutes
     });
 
-    
-
-      await sendEmail(
+    await sendEmail(
       email,
       "Password Reset OTP",
       "",
@@ -523,7 +503,6 @@ export async function forgotPassword(request, response) {
       success: true,
       error: false,
     });
-
   } catch (error) {
     return response.status(500).json({
       message: error.message,
@@ -533,11 +512,11 @@ export async function forgotPassword(request, response) {
   }
 }
 
-export async function verifyForgotPasswordOtp(request, response){
+export async function verifyForgotPasswordOtp(request, response) {
   try {
-    const {email, otp}= request.body;
-    const user = await UserModel.findOne({email:email})
-    if(!user){
+    const { email, otp } = request.body;
+    const user = await UserModel.findOne({ email: email });
+    if (!user) {
       return response.status(400).json({
         message: "Email not found",
         error: true,
@@ -545,15 +524,40 @@ export async function verifyForgotPasswordOtp(request, response){
       });
     }
 
-    if(otp !==user.otp){
+    if(!email || !otp){
       return response.status(400).json({
-        message: "otp wrong",
+        message: "Provide request field email,otp",
         error: true,
         success: false,
       });
     }
+
+    if (otp !== user.otp) {
+      return response.status(400).json({
+        message: "Otp wrong",
+        error: true,
+        success: false,
+      });
+    }
+
+    const currentTime = new Date().toISOString();
+
+    if(user.forgot_password_expiry < currentTime){
+      return response.status(400).json({
+        message:"otp is expired",
+        error: true,
+        success:false
+      })
+    }
+
+    return response.status(200).json({
+      message: "Otp verified!",
+      error: true,
+      success: false,
+    });
+
   } catch (error) {
-     return response.json({
+    return response.json({
       message: "Check your email for OTP",
       success: true,
       error: false,
