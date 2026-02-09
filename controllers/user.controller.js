@@ -542,7 +542,7 @@ export async function verifyForgotPasswordOtp(request, response) {
 
     const currentTime = new Date().toISOString();
 
-    if(user.forgot_password_expiry < currentTime){
+    if(user.otpExpires < currentTime){
       return response.status(400).json({
         message:"otp is expired",
         error: true,
@@ -550,8 +550,12 @@ export async function verifyForgotPasswordOtp(request, response) {
       })
     }
 
+    user.otp="";
+    user.otpExpires="";
+   await user.save();
+
     return response.status(200).json({
-      message: "Otp verified!",
+      message: "verify otp successfully",
       error: true,
       success: false,
     });
