@@ -438,44 +438,91 @@ export async function updateUserDetails(request, response){
 }
 
 
-export async function forgotPassword(request, response){
-  try {
+// export async function forgotPassword(request, response){
+//   try {
     
-    const {email} = request.body;
-    const user = await UserModel.findOne({email:email});
-    if(!user){
-      return response.status(400).json({
-        message:"Email not available",
-        error:true,
-        success:true,
-      })
-    };
+//     const {email} = request.body;
+//     const user = await UserModel.findOne({email:email});
+//     if(!user){
+//       return response.status(400).json({
+//         message:"Email not available",
+//         error:true,
+//         success:true,
+//       })
+//     };
 
-    let verifyCode=  Math.floor(100000 + Math.random()*900000).toString();
+//     let verifyCode=  Math.floor(100000 + Math.random()*900000).toString();
      
-    const updateUser = await UserModel.findByIdAndUpdate(user?._id,{
+//     const updateUser = await UserModel.findByIdAndUpdate(user?._id,{
        
-      otp: verifyCode !== " "? verifyCode:null,
-      otpExpires:verifyCode !==""?Date.now()+600000:""
-    }, {
-      new: true,
-    })
+//       otp: verifyCode !== " "? verifyCode:null,
+//       otpExpires:verifyCode !==""?Date.now()+600000:""
+//     }, {
+//       new: true,
+//     })
 
      
    
 
-    await sendEmailFun({
-      sendTo:email,
-      subject: "Verify email from Ecommerce APP",
-      text:'',
-      html:VerificationEmail(user?.name,verifyCode)
-    });
+//     await sendEmail({
+//       sendTo:email,
+//       subject: "Verify email from Ecommerce APP",
+//       text:'',
+//       html:VerificationEmail(user?.name,verifyCode)
+//     });
     
+//     return response.json({
+//       message:"Check your email",
+//       error:false,
+//       success:true,
+//     })
+
+//   } catch (error) {
+//     return response.status(500).json({
+//       message: error.message,
+//       error: true,
+//       success: false,
+//     });
+//   }
+// }
+
+
+
+export async function forgotPassword(request, response) {
+  try {
+    const { email } = request.body;
+
+    const user = await UserModel.findOne({ email });
+
+    if (!user) {
+      return response.status(400).json({
+        message: "Email not found",
+        error: true,
+        success: false,
+      });
+    }
+
+    const verifyCode = Math.floor(100000 + Math.random() * 900000).toString();
+
+    await UserModel.findByIdAndUpdate(user._id, {
+      otp: verifyCode,
+      otpExpires: Date.now() + 10 * 60 * 1000, // 10 minutes
+    });
+
+    
+
+      await sendEmail(
+      email,
+      "Password Reset OTP",
+      "",
+      VerificationEmail(user.name, verifyCode),
+    );
+
     return response.json({
-      message:"Check your email",
-      error:false,
-      success:true,
-    })
+      message: "Check your email for OTP",
+      success: true,
+      error: false,
+    });
 
   } catch (error) {
     return response.status(500).json({
@@ -485,4 +532,3 @@ export async function forgotPassword(request, response){
     });
   }
 }
-
