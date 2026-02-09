@@ -532,3 +532,15 @@ export async function forgotPassword(request, response) {
     });
   }
 }
+
+export async function verifyForgotPasswordOtp(request, response){
+  try {
+    
+  } catch (error) {
+     return response.json({
+      message: "Check your email for OTP",
+      success: true,
+      error: false,
+    });
+  }
+}
