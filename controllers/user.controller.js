@@ -535,7 +535,15 @@ export async function forgotPassword(request, response) {
 
 export async function verifyForgotPasswordOtp(request, response){
   try {
-    
+    const {email, otp}= request.body;
+    const user = await UserModel.findOne({email:email})
+    if(!user){
+      return response.status(400).json({
+        message: "Email not found",
+        error: true,
+        success: false,
+      });
+    }
   } catch (error) {
      return response.json({
       message: "Check your email for OTP",
