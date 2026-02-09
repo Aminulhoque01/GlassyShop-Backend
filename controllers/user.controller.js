@@ -544,6 +544,14 @@ export async function verifyForgotPasswordOtp(request, response){
         success: false,
       });
     }
+
+    if(otp !==user.otp){
+      return response.status(400).json({
+        message: "otp wrong",
+        error: true,
+        success: false,
+      });
+    }
   } catch (error) {
      return response.json({
       message: "Check your email for OTP",
