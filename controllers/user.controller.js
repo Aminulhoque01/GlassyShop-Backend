@@ -534,7 +534,7 @@ export async function verifyForgotPasswordOtp(request, response) {
 
     if (otp !== user.otp) {
       return response.status(400).json({
-        message: "Otp wrong",
+        message: "Invalid Otp",
         error: true,
         success: false,
       });
