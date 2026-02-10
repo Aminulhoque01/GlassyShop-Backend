@@ -572,7 +572,22 @@ export async function verifyForgotPasswordOtp(request, response) {
 
 export async function resetPassword(request, response){
   try {
+    const{email,newPassword,confirmPassword}=request.body;
+    if(!email || !newPassword || !confirmPassword){
+      return response.status(400).json({
+        message:"provide required fields email, newPassword, confirmPassword"
+      })
+    }
     
+    const user = await UserModel.findOne({email:email});
+    if(!user){
+      return response.status(400).json({
+        message:"email is not available",
+        error:true,
+        success:true,
+      })
+    }
+
   } catch (error) {
     return response.json({
       message: "Check your email for OTP",
