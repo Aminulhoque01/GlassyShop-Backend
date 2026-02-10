@@ -588,6 +588,27 @@ export async function resetPassword(request, response){
       })
     }
 
+    if(newPassword !== confirmPassword){
+      return response.status(400).json({
+        message:"newPassword and confirmPassword must be same",
+        error:true,
+        success:false,
+      })
+    }
+
+    const salt = await bcryptjs.genSalt(10);
+    const hashPassword= await bcryptjs.hash(newPassword,salt);
+
+    const update = await UserModel.findOneAndUpdate(user._id,{
+      password:hashPassword
+    })
+
+    return response.json({
+      message:"password updated successfully",
+      error:false,
+      success:true,
+    })
+
   } catch (error) {
     return response.json({
       message: "Check your email for OTP",
