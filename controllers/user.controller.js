@@ -568,3 +568,16 @@ export async function verifyForgotPasswordOtp(request, response) {
     });
   }
 }
+
+
+export async function resetPassword(request, response){
+  try {
+    
+  } catch (error) {
+    return response.json({
+      message: "Check your email for OTP",
+      success: true,
+      error: false,
+    });
+  }
+}
