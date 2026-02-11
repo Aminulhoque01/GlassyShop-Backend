@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { forgotPassword, loginUserController, 
-    logoutController, registerUserController, 
+    logoutController, refreshToken, registerUserController, 
     removeImageFromCloudinary, resetPassword, 
     updateUserDetails, userAvatarController, 
     verifyEmailController, verifyForgotPasswordOtp } from "../controllers/user.controller.js";
@@ -20,5 +20,6 @@ userRouter.put('/:id', auth, updateUserDetails)
 userRouter.post('/forgot-password',  forgotPassword)
 userRouter.post('/verify-forgot-password',  verifyForgotPasswordOtp)
 userRouter.post('/reset-password',  resetPassword)
+userRouter.post('/refresh-token',  refreshToken)
 
 export default userRouter;
