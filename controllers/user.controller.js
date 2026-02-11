@@ -668,3 +668,15 @@ export async function refreshToken(request, response){
     });
   }
 }
+
+export async function userDetails(request, response){
+  try {
+    
+  } catch (error) {
+     return response.json({
+      message: "Check your email for OTP",
+      success: true,
+      error: false,
+    });
+  }
+}
