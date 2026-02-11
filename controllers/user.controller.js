@@ -622,7 +622,15 @@ export async function resetPassword(request, response){
 
 export async function refreshToken(request, response){
   try {
-    
+    const refreshToken= request.cookies.refreshToken || request?.headers?.authorization?.split(" ")[1];
+
+    if(!refreshToken){
+      return response.status(4001).json({
+        message:"Invalid token",
+        error:true,
+        success:false
+      })
+    }
   } catch (error) {
     return response.json({
       message: "Check your email for OTP",
