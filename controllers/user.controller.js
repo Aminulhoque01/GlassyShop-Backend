@@ -650,6 +650,16 @@ export async function refreshToken(request, response){
       sameSite: "None"
     };
     response.cookie('accessToken', newAccessToken,cookiesOption)
+
+    return response.json({
+      message:"New Access token generated",
+      error:false,
+      success: true,
+      data:{
+        accessToken : newAccessToken
+      }
+    })
+    
   } catch (error) {
     return response.json({
       message: "Check your email for OTP",
