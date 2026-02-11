@@ -633,6 +633,23 @@ export async function refreshToken(request, response){
     }
 
     const verifyToken = await jwt.verify(refreshToken,process.env.SECRET_KEY_REFRESH_TOKEN)
+    if(!verifyToken){
+      return response.status(4001).json({
+        message:"token is expired",
+        error:true,
+        success:false
+      })
+    }
+
+    userId = verifyToken?._id;
+
+    const newAccessToken = await generatedAccessToken(USERId)
+    const cookiesOption = {
+      httpOnly:true,
+      secure:true,
+      sameSite: "None"
+    };
+    response.cookie('accessToken', newAccessToken,cookiesOption)
   } catch (error) {
     return response.json({
       message: "Check your email for OTP",
