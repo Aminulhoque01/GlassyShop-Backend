@@ -631,6 +631,8 @@ export async function refreshToken(request, response){
         success:false
       })
     }
+
+    const verifyToken = await jwt.verify(refreshToken,process.env.SECRET_KEY_REFRESH_TOKEN)
   } catch (error) {
     return response.json({
       message: "Check your email for OTP",
