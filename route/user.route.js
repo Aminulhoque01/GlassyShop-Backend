@@ -21,5 +21,6 @@ userRouter.post('/forgot-password',  forgotPassword)
 userRouter.post('/verify-forgot-password',  verifyForgotPasswordOtp)
 userRouter.post('/reset-password',  resetPassword)
 userRouter.post('/refresh-token',  refreshToken)
+userRouter.get('/user-details', auth, userDetails)
 
 export default userRouter;

@@ -669,6 +669,7 @@ export async function refreshToken(request, response){
   }
 }
 
+// login user details
 export async function userDetails(request, response){
   try {
     const userId = request.userId;
