@@ -679,7 +679,9 @@ export async function userDetails(request, response){
     return response.json({
       message:"user details",
       data: user,
-      
+      error:false,
+      success:true,
+
     })
   } catch (error) {
      return response.json({
