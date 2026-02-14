@@ -32,3 +32,6 @@ categorySchema.virtual('id').get(function(){
 
 const CategoryModel=mongoose.model("category", categorySchema);
 export default CategoryModel;
+
+
+
