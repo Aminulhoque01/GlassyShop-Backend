@@ -28,3 +28,7 @@ const categorySchema= mongoose.Schema({
 categorySchema.virtual('id').get(function(){
     return this._id.toHexString();
 })
+
+
+const CategoryModel=mongoose.model("category", categorySchema);
+export default CategoryModel;
