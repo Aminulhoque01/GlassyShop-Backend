@@ -1,10 +1,7 @@
-
 import CategoryModel from "../models/category.model";
-
 
 import { v2 as cloudinary } from "cloudinary";
 import fs from "fs";
-
 
 cloudinary.config({
   cloud_name: process.env.cloudinary_Config_Cloud_Name,
@@ -13,53 +10,38 @@ cloudinary.config({
   secure: true,
 });
 
-
 export async function categoryImageController(request, response) {
   try {
-    const userId = request.userId;
+    imagesArr = [];
 
-    const user = await CategoryModel.findById(userId);
+    const image = request.files;
 
-    if (!user) {
-      return response.status(404).json({
-        message: "User not found",
-        error: true,
-        success: false,
-      });
-    }
-
-    /* -------------------------
-       DELETE OLD IMAGE FIRST
-    --------------------------*/
-    if (user.avatar) {
-      const parts = user.avatar.split("/");
-      const fileName = parts[parts.length - 1];
-      const publicId = fileName.split(".")[0];
-
-      await cloudinary.uploader.destroy(publicId);
-    }
-
-    /* -------------------------
-       UPLOAD NEW IMAGE
-    --------------------------*/
-    const file = request.files[0];
-
-    const result = await cloudinary.uploader.upload(file.path, {
+    const options = {
       use_filename: true,
-      unique_filename: true,
+      unique_filename: false,
       overwrite: false,
-    });
+    };
+    
 
-    fs.unlinkSync(file.path);
+    for(let i=0; i<image?.length; i++){
+      image = await cloudinary.uploader.upload(
+        image[i].path,
+        options,
+        function(error, result){
+          imagesArr.push(request.secure_url);
+          fs.unlinkSync(`uploads/${request.files[i].filename}`)
+        }
+      )
+    }
+     
 
-    user.avatar = result.secure_url;
-    await user.save();
+   return response.status(200).json({
+    images:imagesArr[0]
+   })
 
-    return response.status(200).json({
-      _id: userId,
-      avatar: result.secure_url,
-      success: true,
-    });
+    
+
+    
   } catch (error) {
     return response.status(500).json({
       message: error.message,
