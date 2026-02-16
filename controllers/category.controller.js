@@ -34,6 +34,13 @@ export async function categoryImageController(request, response) {
       )
     }
      
+    let category = new CategoryModel({
+      name: req.body.name,
+      images:imagesArr,
+      color: req.body.parentId,
+      parentId: req.body.parentId,
+      parentCatName: req.body.parentCatName,
+    })
 
    return response.status(200).json({
     images:imagesArr
