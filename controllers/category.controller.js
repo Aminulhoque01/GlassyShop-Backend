@@ -36,7 +36,7 @@ export async function categoryImageController(request, response) {
      
 
    return response.status(200).json({
-    images:imagesArr[0]
+    images:imagesArr
    })
 
     
