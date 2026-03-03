@@ -65,3 +65,16 @@ export async function categoryImageController(request, response) {
     });
   }
 }
+
+
+export async function createCategory(request, response){
+    try {
+      
+    } catch (error) {
+      return response.status(500).json({
+      message: error.message,
+      error: true,
+      success: false,
+    });
+    }
+}
