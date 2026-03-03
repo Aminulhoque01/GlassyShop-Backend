@@ -1,6 +1,7 @@
 import CategoryModel from "../models/category.model";
 
 import { v2 as cloudinary } from "cloudinary";
+import { error } from "console";
 import fs from "fs";
 
 cloudinary.config({
@@ -35,12 +36,19 @@ export async function categoryImageController(request, response) {
     }
      
     let category = new CategoryModel({
-      name: req.body.name,
+      name: request.body.name,
       images:imagesArr,
-      color: req.body.parentId,
-      parentId: req.body.parentId,
-      parentCatName: req.body.parentCatName,
-    })
+      color: request.body.parentId,
+      parentId: request.body.parentId,
+      parentCatName: request.body.parentCatName,
+    });
+
+    if(!category){
+      response.status(500).json({
+        error:error,
+        success:false,
+      })
+    }
 
    return response.status(200).json({
     images:imagesArr
