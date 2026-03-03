@@ -70,6 +70,22 @@ export async function categoryImageController(request, response) {
 export async function createCategory(request, response){
     try {
       
+      let category=new CategoryModel({
+        name:req.body.name,
+        images:imagesArr,
+        parentId:req.body.parentId,
+        parentCatName:req.body.parentCatName,
+      });
+
+      if(!category){
+        return response.status(500).json({
+          message:"Category not found",
+          error:true,
+          success:false
+        })
+      }
+
+
     } catch (error) {
       return response.status(500).json({
       message: error.message,
