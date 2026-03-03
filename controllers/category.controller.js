@@ -85,6 +85,16 @@ export async function createCategory(request, response){
         })
       }
 
+      category=await category.save();
+      imagesArr=[];
+
+      response.status(500).json({
+        message:"Category not created",
+        error:true,
+        success:false,
+        category:category
+      })
+
 
     } catch (error) {
       return response.status(500).json({
