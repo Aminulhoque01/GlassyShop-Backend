@@ -71,10 +71,10 @@ export async function createCategory(request, response){
     try {
       
       let category=new CategoryModel({
-        name:req.body.name,
+        name:request.body.name,
         images:imagesArr,
-        parentId:req.body.parentId,
-        parentCatName:req.body.parentCatName,
+        parentId:request.body.parentId,
+        parentCatName:request.body.parentCatName,
       });
 
       if(!category){
