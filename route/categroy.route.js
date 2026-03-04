@@ -1,10 +1,11 @@
 import { Router } from "express";
-import { categoryImageController } from "../controllers/category.controller";
+import { categoryImageController, createCategory } from "../controllers/category.controller";
 
 
 const categoryRouter= Router();
 
  categoryRouter.post("/image-upload", categoryImageController)
+ categoryRouter.post("/create", createCategory)
 
 
 export default categoryRouter;
