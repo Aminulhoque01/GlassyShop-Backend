@@ -1,4 +1,4 @@
-import CategoryModel from "../models/category.model";
+import CategoryModel from "../models/category.model.js";
 
 import { v2 as cloudinary } from "cloudinary";
 import { error } from "console";
