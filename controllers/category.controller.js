@@ -104,3 +104,16 @@ export async function createCategory(request, response){
     });
     }
 }
+
+
+export async function getAllCategory(request,response){
+  try {
+    
+  } catch (error) {
+    return response.status(500).json({
+      message: error.message,
+      error: true,
+      success: false,
+    })
+  }
+}
