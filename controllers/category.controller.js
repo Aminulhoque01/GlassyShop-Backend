@@ -108,7 +108,18 @@ export async function createCategory(request, response){
 
 export async function getAllCategory(request,response){
   try {
-    
+     const categories= await CategoryModel.find();
+     const categoryMap={};
+
+     categories.forEach(cat=>{
+      categoryMap[cat._id]={...cat._doc, children:[]}
+     });
+
+     const rootCategories=[];
+     categories.forEach(cat=>{
+      
+     })
+
   } catch (error) {
     return response.status(500).json({
       message: error.message,
