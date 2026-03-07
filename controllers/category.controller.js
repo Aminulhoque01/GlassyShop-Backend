@@ -117,6 +117,12 @@ export async function getAllCategory(request,response){
 
      const rootCategories=[];
      categories.forEach(cat=>{
+       
+      if(cat.parentId){
+        categoryMap[cat.parentId].children.push(categoryMap[cat._id]);
+      }else{
+        rootCategories.push(categoryMap[cat._id]);
+      }
       
      })
 
