@@ -125,6 +125,13 @@ export async function getAllCategory(request,response){
       }
       
      })
+     return response.status(200).json({
+       
+      error: false,
+      success: true,
+      data:rootCategories,
+    })
+
 
   } catch (error) {
     return response.status(500).json({
