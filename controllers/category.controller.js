@@ -11,52 +11,37 @@ cloudinary.config({
   secure: true,
 });
 
-export async function categoryImageController(request, response) {
+export async function categoryCreateController(request, response) {
   try {
-    imagesArr = [];
 
-    const image = request.files;
+   let imagesArr = [];
+  const images = request.files;
 
-    const options = {
-      use_filename: true,
-      unique_filename: false,
-      overwrite: false,
-    };
-    
-
-    for(let i=0; i<image?.length; i++){
-      image = await cloudinary.uploader.upload(
-        image[i].path,
-        options,
-        function(error, result){
-          imagesArr.push(request.secure_url);
+   const options={
+    use_filename:true,
+    unique_filename:false,
+    overwrite:false,
+   }
+   
+    for (let i = 0; i < images.length; i++) {
+      const result = await cloudinary.uploader.upload(images[i].path, options,
+        function (error, result){
+          imagesArr.push(result.secure_url);
           fs.unlinkSync(`uploads/${request.files[i].filename}`)
         }
-      )
-    }
-     
-    let category = new CategoryModel({
-      name: request.body.name,
-      images:imagesArr,
-      color: request.body.parentId,
-      parentId: request.body.parentId,
-      parentCatName: request.body.parentCatName,
+      );
+
+      
+    };
+
+    return response.status(200).json({
+      images:imagesArr
+    })
+
+    return response.status(200).json({
+      images: imagesArr
     });
 
-    if(!category){
-      response.status(500).json({
-        error:error,
-        success:false,
-      })
-    }
-
-   return response.status(200).json({
-    images:imagesArr
-   })
-
-    
-
-    
   } catch (error) {
     return response.status(500).json({
       message: error.message,
@@ -65,7 +50,6 @@ export async function categoryImageController(request, response) {
     });
   }
 }
-
 
 export async function createCategory(request, response){
     try {
