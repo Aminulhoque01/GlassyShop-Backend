@@ -38,9 +38,7 @@ export async function categoryCreateController(request, response) {
       images:imagesArr
     })
 
-    return response.status(200).json({
-      images: imagesArr
-    });
+     
 
   } catch (error) {
     return response.status(500).json({
