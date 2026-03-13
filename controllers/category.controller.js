@@ -34,7 +34,7 @@ export async function categoryCreateController(request, response) {
       
     };
 
-     let category=new CategoryModel({
+      let category=new CategoryModel({
         name:request.body.name,
         images:imagesArr,
         parentId:request.body.parentId,
