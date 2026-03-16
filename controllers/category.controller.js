@@ -142,5 +142,13 @@ export async function getAllCategory(request,response){
 }
 
 export async function getSingleCategory(request, response){
-  
+  try {
+    
+  } catch (error) {
+    return response.status(500).json({
+      message: error.message,
+      error: true,
+      success: false,
+    })
+  }
 }
