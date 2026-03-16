@@ -140,3 +140,7 @@ export async function getAllCategory(request,response){
     })
   }
 }
+
+export async function getSingleCategory(request, response){
+  
+}
