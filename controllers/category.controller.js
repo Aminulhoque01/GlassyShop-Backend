@@ -143,7 +143,15 @@ export async function getAllCategory(request,response){
 
 export async function getCategoryCount(request, response){
   try {
-    
+    const categoryCount= await CategoryModel.countDocuments({parentId:undefined})
+    if(!categoryCount){
+      res.status(500).json({success:false})
+    }else{
+      res.send({
+        categoryCount:categoryCount
+      })
+    }
+
   } catch (error) {
     return response.status(500).json({
       message: error.message,
