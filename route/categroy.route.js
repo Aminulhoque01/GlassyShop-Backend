@@ -7,6 +7,6 @@ const categoryRouter = Router();
 
 categoryRouter.post("/create", upload.array("images", 5), categoryCreateController);
 categoryRouter.post("/create-sub", createCategory);
-categoryRouter.post("/all", auth, getAllCategory);
+categoryRouter.get("/all", auth, getAllCategory);
 
 export default categoryRouter;
