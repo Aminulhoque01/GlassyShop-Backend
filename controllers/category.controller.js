@@ -165,6 +165,8 @@ export async function getCategoryCount(request, response){
 
 export async function getSingleCategory(request, response){
   try {
+    const id = request.params.id;
+    const single= await CategoryModel.findOne(id);
     
   } catch (error) {
     return response.status(500).json({
