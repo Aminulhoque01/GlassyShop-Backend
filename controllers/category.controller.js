@@ -167,7 +167,14 @@ export async function getSingleCategory(request, response){
   try {
     const id = request.params.id;
     const single= await CategoryModel.findOne(id);
-    
+    if(!single){
+      return response.json(500).json({
+         message:"single category not found",
+          error: true,
+          success: false,
+      })
+    }
+
   } catch (error) {
     return response.status(500).json({
       message: error.message,
