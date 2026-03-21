@@ -175,6 +175,8 @@ export async function getSingleCategory(request, response){
       })
     }
 
+    
+
   } catch (error) {
     return response.status(500).json({
       message: error.message,
