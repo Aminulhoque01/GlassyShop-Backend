@@ -174,7 +174,13 @@ export async function getSingleCategory(request, response){
           success: false,
       })
     }
-
+   
+    return response.json(200).json({
+         message:"single category",
+          error: true,
+          success:  true,
+          data: single
+      })
     
 
   } catch (error) {
