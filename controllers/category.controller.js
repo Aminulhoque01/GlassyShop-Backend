@@ -180,7 +180,7 @@ export async function getSingleCategory(request, response){
           error: true,
           success:  true,
           data: single
-      })
+    })
     
 
   } catch (error) {
