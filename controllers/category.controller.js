@@ -143,13 +143,9 @@ export async function getAllCategory(request,response){
 
 export async function getCategoryCount(request, response){
   try {
-    const categoryCount= await CategoryModel.countDocuments({parentId:undefined})
-    if(!categoryCount){
+    const categories= await CategoryModel.find();
+    if(!categories){
       res.status(500).json({success:false})
-    }else{
-      res.send({
-        categoryCount:categoryCount
-      })
     }
 
   } catch (error) {
