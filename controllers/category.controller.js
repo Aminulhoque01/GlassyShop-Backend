@@ -146,6 +146,17 @@ export async function getCategoryCount(request, response){
     const categories= await CategoryModel.find();
     if(!categories){
       res.status(500).json({success:false})
+    }else{
+      const subCatArr=[];
+      for(let cat of categories){
+        if(cat.parentId !== undefined){
+          subCatArr.push(cat)
+        }
+      }
+
+      response.send({
+        categoryCount: subCatArr,
+      })
     }
 
   } catch (error) {
