@@ -143,7 +143,7 @@ export async function getAllCategory(request,response){
 
 export async function getCategoryCount(request, response){
   try {
-    const categories= await CategoryModel.find();
+    const categories= await CategoryModel.findOne({id:undefined})
     if(!categories){
       res.status(500).json({success:false})
     }else{
