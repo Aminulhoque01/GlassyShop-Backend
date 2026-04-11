@@ -272,9 +272,28 @@ export async function deleteCategory(request, responsive){
       const image = urlArr[urlArr.length-1];
 
       const imageName= image.split(".")[0];
-      cloudinary.uploader.destroy(imageName,(error, result)=>{
-        console.log(error, result)
-      })
+      if(imageName){
+         cloudinary.uploader.destroy(imageName,(error, result)=>{
+          console.log(error, result)
+        })
+      }
+      
+      const subCategory= await CategoryModel.find(parentId:req.params.id)
+
+      for(let i =0; i<subCategory.length;i++){
+        console.log(subCategory[i]._id);
+      }
+
+      const thirdsubCategory=await CategoryModel.find({
+        parentId:subCategory[i]._id
+      });
+
+      for(let i =0; i<thirdsubCategory.length;i++){
+        const deletedThirdSubCat= await CategoryModel.findByIdAndDelete(thirdsubCategory[i]._id);
+      }
+
+      const deletedSubCat=await CategoryModel.findByIdAndDelete(subCategory[i]._id)
+
     }
   } catch (error) {
     return response.status(500).json({
