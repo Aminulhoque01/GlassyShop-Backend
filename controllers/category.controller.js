@@ -226,3 +226,33 @@ export async function getSingleCategory(request, response){
     })
   }
 }
+
+
+export async function getSingleCategory(request, response) {
+  try {
+    const id = request.params.id;
+
+    const single = await CategoryModel.findById(id);
+
+    if (!single) {
+      return response.status(404).json({
+        message: "Single category not found",
+        error: true,
+        success: false,
+      });
+    }
+
+    return response.status(200).json({
+      message: "Single category fetched successfully",
+      error: false,
+      success: true,
+      data: single,
+    });
+  } catch (error) {
+    return response.status(500).json({
+      message: error.message,
+      error: true,
+      success: false,
+    });
+  }
+}
