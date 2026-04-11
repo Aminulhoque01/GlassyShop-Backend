@@ -256,3 +256,31 @@ export async function getSingleCategory(request, response) {
     });
   }
 }
+
+
+
+ 
+
+export async function deleteCategory(request, responsive){
+  try {
+    const category = CategoryModel.findById(request.params.id)
+    const images = category.images;
+
+    for(img of images){
+      const imgUrl=img;
+      const urlArr=imgUrl.split("/");
+      const image = urlArr[urlArr.length-1];
+
+      const imageName= image.split(".")[0];
+      cloudinary.uploader.destroy(imageName,(error, result)=>{
+        console.log(error, result)
+      })
+    }
+  } catch (error) {
+    return response.status(500).json({
+      message: error.message,
+      error: true,
+      success: false,
+    });
+  }
+}
