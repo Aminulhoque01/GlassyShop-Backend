@@ -294,6 +294,20 @@ export async function deleteCategory(request, responsive){
 
       const deletedSubCat=await CategoryModel.findByIdAndDelete(subCategory[i]._id)
 
+      if(!deletedSubCat){
+        response.status(404).json({
+          message:"Category not found",
+          success:false
+        })
+      }
+
+
+      response.status(200).json({
+        success:true,
+        message:"Category Deleted!",
+        success:true
+      })
+
     }
   } catch (error) {
     return response.status(500).json({
