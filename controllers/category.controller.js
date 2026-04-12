@@ -278,7 +278,7 @@ export async function deleteCategory(request, responsive){
         })
       }
       
-      const subCategory= await CategoryModel.find(parentId:req.params.id)
+      const subCategory= await CategoryModel.find({parentId:req.params.id})
 
       for(let i =0; i<subCategory.length;i++){
         console.log(subCategory[i]._id);
