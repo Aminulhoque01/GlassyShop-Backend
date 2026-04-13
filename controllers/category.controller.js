@@ -350,6 +350,16 @@ export async function deleteCategory(request, response){
 
 export async function updatedCategory(request, response){
   try {
+     const category= await CategoryModel.findByIdAndUpdate(
+      request.params.id,
+     {
+      name:request.body.name,
+      images:request.body.image,
+      color:request.body.color,
+      parentId:request.body.parentId,
+      parentCatName:request.body.parentCatName
+     }
+     )
     
   } catch (error) {
     return response.status(500).json({
