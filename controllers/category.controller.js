@@ -258,6 +258,35 @@ export async function getSingleCategory(request, response) {
 }
 
 
+export async function removeImageFromCloudinary(request, response) {
+  try {
+    const imgUrl = request.query.image;
+
+    if (!imgUrl) {
+      return response.status(400).json({
+        message: "Image URL required",
+        error: true,
+      });
+    }
+
+    const urlArr = imgUrl.split("/");
+    const image = urlArr[urlArr.length - 1];
+    const publicId = image.split(".")[0];
+
+    const result = await cloudinary.uploader.destroy(publicId);
+
+    return response.status(200).json({
+      success: true,
+      result,
+    });
+  } catch (error) {
+    return response.status(500).json({
+      message: error.message,
+      error: true,
+      success: false,
+    });
+  }
+}
 
  
 
