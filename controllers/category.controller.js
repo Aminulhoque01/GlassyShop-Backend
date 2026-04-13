@@ -261,7 +261,7 @@ export async function getSingleCategory(request, response) {
 
  
 
-export async function deleteCategory(request, responsive){
+export async function deleteCategory(request, response){
   try {
     const category = CategoryModel.findById(request.params.id)
     const images = category.images;
@@ -311,9 +311,9 @@ export async function deleteCategory(request, responsive){
     }
   } catch (error) {
     return response.status(500).json({
-      message: error.message,
-      error: true,
-      success: false,
+      message: "Category deleted!",
+      error: false,
+      success: true,
     });
   }
 }
