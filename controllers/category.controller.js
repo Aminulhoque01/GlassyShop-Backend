@@ -358,8 +358,29 @@ export async function updatedCategory(request, response){
       color:request.body.color,
       parentId:request.body.parentId,
       parentCatName:request.body.parentCatName
+     },
+     {new:true}
+     );
+
+     if(!category){
+      return response.status(500).json({
+        message:"Category cannot be updated!",
+        success:false,
+        error:true
+      })
+
+
      }
-     )
+
+     imagesArr=[];
+
+     response.status(200).json({
+      message:"category updated",
+      error:false,
+      success:true,
+      category:category,
+      
+     })
     
   } catch (error) {
     return response.status(500).json({
