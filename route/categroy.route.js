@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { categoryCreateController, createCategory, deleteCategory, getAllCategory, getCategoryCount, getSingleCategory, getSubCategoryCount, removeImageFromCloudinary } from "../controllers/category.controller.js";
+import { categoryCreateController, createCategory, deleteCategory, getAllCategory, getCategoryCount, getSingleCategory, getSubCategoryCount, removeImageFromCloudinary, updatedCategory } from "../controllers/category.controller.js";
 import auth from "../middleware/auth.js";
 import upload from "../middleware/multer.js";
 
@@ -12,6 +12,7 @@ categoryRouter.get("/category-count", auth, getCategoryCount);
 categoryRouter.get("/sub-category-count", auth, getSubCategoryCount);
 categoryRouter.get("/:id", auth, getSingleCategory);
 categoryRouter.get("/:id", getSingleCategory);
+categoryRouter.put("/:id", updatedCategory);
 categoryRouter.delete('/deleteImage', auth, removeImageFromCloudinary);
 categoryRouter.delete("/:id", auth, deleteCategory);
 
