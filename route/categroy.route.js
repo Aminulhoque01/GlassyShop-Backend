@@ -12,7 +12,7 @@ categoryRouter.get("/category-count", auth, getCategoryCount);
 categoryRouter.get("/sub-category-count", auth, getSubCategoryCount);
 categoryRouter.get("/:id", auth, getSingleCategory);
 categoryRouter.get("/:id", getSingleCategory);
-categoryRouter.put("/:id", updatedCategory);
+categoryRouter.put("/:id", auth, updatedCategory);
 categoryRouter.delete('/deleteImage', auth, removeImageFromCloudinary);
 categoryRouter.delete("/:id", auth, deleteCategory);
 
