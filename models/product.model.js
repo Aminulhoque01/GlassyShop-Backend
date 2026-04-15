@@ -86,5 +86,31 @@ const productSchema=mongoose.Schema({
             type:String,
             default:null
         }
-    ]
+    ],
+    size:[
+        {
+            type:String,
+            default:null
+        }
+    ],
+    productWeight:[
+        {
+            type:String,
+            default:null,
+        }
+    ],
+    location:[
+        {
+            value:{
+                type:String,
+            },
+            label:{
+                type:String,
+            }
+        },
+    ],
+    dateCreated:{
+        type:Date,
+        default:Date.now,
+    }
 })
