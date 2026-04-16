@@ -123,4 +123,6 @@ productSchema.set('toJSON',{
     virtual:true
 })
 
-exports.Product= mongoose.model('Product',productSchema)
+const ProductModel= mongoose.model('Product',productSchema)
+
+export default ProductModel;
