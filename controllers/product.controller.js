@@ -1,6 +1,7 @@
 import { v2 as cloudinary } from "cloudinary";
 import fs from "fs";
 import ProductModel from "../models/product.model";
+import { error } from "console";
 
 
 cloudinary.config({
@@ -72,6 +73,23 @@ export  async function createProduct(request, response){
        productRam: request.body.productRam,
        size: request.body.size,
        productWeight: request.body.productWeight,
+      })
+      product = await ProductModel.save();
+
+      if(!product){
+        response.status(500).json({
+          error:true,
+          success:false,
+          message:"product not created"
+        })
+      }
+
+      imagesArr=[];
+
+      response.status(200).json({
+        message:"product created successfully",
+        error:false,
+        success:true,
       })
 
   } catch (error) {

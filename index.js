@@ -7,6 +7,7 @@ import helmet from "helmet";
 import connectDB from "./config/ConnectDB.js";
 import userRouter from "./route/user.route.js";
 import categoryRouter from "./route/categroy.route.js";
+import productRouter from "./route/product.route.js";
 
 dotenv.config();
 
@@ -23,6 +24,7 @@ console.log(process.env.EMAIL, process.env.EMAIL_PASS);
 app.get("/", (req, res) => res.json({ message: "Server is running 🚀" }));
 app.use("/api/user", userRouter);
 app.use("/api/category", categoryRouter);
+app.use("/api/product", productRouter);
 
 const PORT = process.env.PORT || 8080;
 const startServer = async () => {
