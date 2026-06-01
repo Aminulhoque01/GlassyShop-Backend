@@ -46,3 +46,12 @@ export async function uploadImages(request, response) {
     })
   }
 }
+
+
+export  async function createProduct(request, response){
+  try {
+    
+  } catch (error) {
+    
+  }
+}
