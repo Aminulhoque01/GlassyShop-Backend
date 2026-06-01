@@ -1,6 +1,6 @@
 import { v2 as cloudinary } from "cloudinary";
 import fs from "fs";
-import ProductModel from "../models/product.model";
+import ProductModel from "../models/product.model.js";
 import { error } from "console";
 
 
@@ -12,54 +12,61 @@ cloudinary.config({
 });
 
 
-var imagesArr = [];
+
+
 
 export async function uploadImages(request, response) {
   try {
-    imagesArr=[];
-    const image= request.files;
+    const imagesArr = [];
 
-    const options={
-      use_filename:true,
-      unique_filename:false,
-      overwrite:false,
+    if (!request.files || request.files.length === 0) {
+      return response.status(400).json({
+        success: false,
+        message: "No images uploaded",
+      });
     }
 
-    for(let i=0; i<image?.length; i++){
-      const img= await cloudinary.uploader.upload(
-        image[i].path,
-        function(error,result){
-          imagesArr.push(request.secure_url);
-          fs.unlinkSync(`uploads/${request.files[i].filename}`)
-          
-        }
-      )
+    for (const file of request.files) {
+      const result = await cloudinary.uploader.upload(file.path, {
+        use_filename: true,
+        unique_filename: false,
+        overwrite: false,
+      });
+
+      imagesArr.push(result.secure_url);
+
+      // Local file delete
+      if (fs.existsSync(file.path)) {
+        fs.unlinkSync(file.path);
+      }
     }
 
     return response.status(200).json({
-      images:imagesArr
-    })
-
+      success: true,
+      images: imagesArr,
+    });
   } catch (error) {
+    console.error("Upload Error:", error);
+
     return response.status(500).json({
-      message: error.message || error,
-      error:true,
-      success:false
-    })
+      success: false,
+      message: error.message,
+    });
   }
 }
 
 
 export  async function createProduct(request, response){
   try {
-    const product = new ProductModel({
+    let product = new ProductModel({
        name: request.body.name,
        description: request.body.description,
-       images:imagesArr,
+       images:request.body.images,
        brand: request.body.brand,
        price: request.body.price,
        oldPrice: request.body.oldPrice,
        catName: request.body.catName,
+        
        catId: request.body.catId,
        subCatId: request.body.subCatId,
        subCat: request.body.subCat,
@@ -74,7 +81,7 @@ export  async function createProduct(request, response){
        size: request.body.size,
        productWeight: request.body.productWeight,
       })
-      product = await ProductModel.save();
+      product = await product.save();
 
       if(!product){
         response.status(500).json({
@@ -83,8 +90,7 @@ export  async function createProduct(request, response){
           message:"product not created"
         })
       }
-
-      imagesArr=[];
+ 
 
       response.status(200).json({
         message:"product created successfully",

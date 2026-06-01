@@ -198,34 +198,7 @@ export async function getSubCategoryCount(request, response){
 
 
 
-export async function getSingleCategory(request, response){
-  try {
-    const id = request.params.id;
-    const single= await CategoryModel.findOne(id);
-    if(!single){
-      return response.json(500).json({
-         message:"single category not found",
-          error: true,
-          success: false,
-      })
-    }
-   
-    return response.json(200).json({
-         message:"single category",
-          error: true,
-          success:  true,
-          data: single
-    })
-    
 
-  } catch (error) {
-    return response.status(500).json({
-      message: error.message,
-      error: true,
-      success: false,
-    })
-  }
-}
 
 
 export async function getSingleCategory(request, response) {
