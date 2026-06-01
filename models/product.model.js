@@ -32,7 +32,7 @@ const productSchema=mongoose.Schema({
         type:String,
         default:''
     },
-    carId:{
+    catId:{
         type:String,
         default:""
     },
@@ -40,10 +40,7 @@ const productSchema=mongoose.Schema({
         type:String,
         default:'',
     },
-    subCatId:{
-        type:String,
-        default:''
-    },
+   
     subCat:{
         type:String,
         default:''

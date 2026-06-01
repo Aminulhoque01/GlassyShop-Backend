@@ -1,5 +1,6 @@
 import { v2 as cloudinary } from "cloudinary";
 import fs from "fs";
+import ProductModel from "../models/product.model";
 
 
 cloudinary.config({
@@ -50,8 +51,34 @@ export async function uploadImages(request, response) {
 
 export  async function createProduct(request, response){
   try {
-    
+    const product = new ProductModel({
+       name: request.body.name,
+       description: request.body.description,
+       images:imagesArr,
+       brand: request.body.brand,
+       price: request.body.price,
+       oldPrice: request.body.oldPrice,
+       catName: request.body.catName,
+       catId: request.body.catId,
+       subCatId: request.body.subCatId,
+       subCat: request.body.subCat,
+       subCatName: request.body.subCatName,
+       thirdsubCat: request.body.thirdsubCat,
+       thirdsubCatName: request.body.thirdsubCatName,
+       countInStock: request.body.countInStock,
+       rating: request.body.rating,
+       isFeatured: request.body.isFeatured,
+       discount: request.body.discount,
+       productRam: request.body.productRam,
+       size: request.body.size,
+       productWeight: request.body.productWeight,
+      })
+
   } catch (error) {
-    
+    return response.status(500).json({
+      message:error.message || error,
+      error: true,
+      success: false,
+    })
   }
 }
