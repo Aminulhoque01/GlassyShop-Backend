@@ -107,27 +107,99 @@ export  async function createProduct(request, response){
   }
 }
 
-export async function getAllProduct(request, response){
+ 
+
+export async function getAllProduct(request, response) {
   try {
-    const products = await ProductModel.find();
-    if(!products){
-      response.status(500).json({
-        error:true,
-        success:false
-      })
+    // Query Params
+    const page = Number(request.query.page) || 1;
+    const limit = Number(request.query.limit) || 10;
+    const search = request.query.search || "";
+    const catId = request.query.catId || "";
+    const subCatId = request.query.subCatId || "";
+    const brand = request.query.brand || "";
+    const minPrice = Number(request.query.minPrice) || 0;
+    const maxPrice = Number(request.query.maxPrice) || 999999999;
+    const sort = request.query.sort || "newest";
+
+    const skip = (page - 1) * limit;
+
+    // Filter Object
+    let filter = {};
+
+    // Search by name
+    if (search) {
+      filter.name = {
+        $regex: search,
+        $options: "i",
+      };
     }
 
+    // Category Filter
+    if (catId) {
+      filter.catId = catId;
+    }
+
+    // Sub Category Filter
+    if (subCatId) {
+      filter.subCatId = subCatId;
+    }
+
+    // Brand Filter
+    if (brand) {
+      filter.brand = {
+        $regex: brand,
+        $options: "i",
+      };
+    }
+
+    // Price Filter
+    filter.price = {
+      $gte: minPrice,
+      $lte: maxPrice,
+    };
+
+    // Sorting
+    let sortOption = {};
+
+    switch (sort) {
+      case "priceLow":
+        sortOption = { price: 1 };
+        break;
+
+      case "priceHigh":
+        sortOption = { price: -1 };
+        break;
+
+      case "rating":
+        sortOption = { rating: -1 };
+        break;
+
+      default:
+        sortOption = { createdAt: -1 };
+    }
+
+    const totalProducts = await ProductModel.countDocuments(filter);
+
+    const products = await ProductModel.find(filter)
+      .sort(sortOption)
+      .skip(skip)
+      .limit(limit);
 
     return response.status(200).json({
-      error:false,
-      success:true,
-      data:products,
-    })
+      success: true,
+      error: false,
+      totalProducts,
+      totalPages: Math.ceil(totalProducts / limit),
+      currentPage: page,
+      products,
+    });
+
   } catch (error) {
-     return response.status(500).json({
-      message:error.message || error,
-      error: true,
+    return response.status(500).json({
       success: false,
-    })
+      error: true,
+      message: error.message,
+    });
   }
 }
