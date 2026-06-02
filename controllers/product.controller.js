@@ -181,7 +181,7 @@ export async function getAllProduct(request, response) {
 
     const totalProducts = await ProductModel.countDocuments(filter);
 
-    const products = await ProductModel.find(filter)
+    const products = await ProductModel.find(filter).populate('category')
       .sort(sortOption)
       .skip(skip)
       .limit(limit);
@@ -201,5 +201,30 @@ export async function getAllProduct(request, response) {
       error: true,
       message: error.message,
     });
+  }
+}
+
+
+export async function getAllProductByCatId(request, response){
+  try {
+    const page= parseInt(request.query.page)||1;
+    const perPage = parseInt(request.query.perPage);
+    
+    const totalPosts= await ProductModel.countDocuments();
+    const totalPages= Math.ceil(totalPosts/perPage);
+
+    if(page > totalPages){
+      return response.status(404).json({
+        message:"Page not found",
+        success:false,
+        error:true,
+      })
+    }
+  } catch (error) {
+    return response.status(500).json({
+      message:error.message || error,
+      error: true,
+      success: false,
+    })
   }
 }
