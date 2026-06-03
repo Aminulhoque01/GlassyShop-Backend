@@ -493,7 +493,7 @@ export async function getAllProductByPrice(request, response){
 
   if(request.query.catId !=="" && request.query.catId !== undefined){
     const productListArr = await ProductModel.find({
-      catId: req.query.catId,
+      catId: request.query.catId,
 
     }).populate('category')
 
@@ -505,7 +505,7 @@ export async function getAllProductByPrice(request, response){
   
   if(request.query.subCatId !=="" && request.query.subCatId !== undefined){
     const productListArr = await ProductModel.find({
-      subCatId: req.query.subCatId,
+      subCatId: request.query.subCatId,
 
     }).populate('category')
 
@@ -517,7 +517,7 @@ export async function getAllProductByPrice(request, response){
 
   if(request.query.thirdsubCat !=="" && request.query.thirdsubCat !== undefined){
     const productListArr = await ProductModel.find({
-      thirdsubCat: req.query.thirdsubCat,
+      thirdsubCat: request.query.thirdsubCat,
 
     }).populate('category')
 
@@ -545,3 +545,52 @@ export async function getAllProductByPrice(request, response){
 
 }
 
+
+
+
+
+export async function getAllProductByRating(request, response){
+  try {
+    const page= parseInt(request.query.page)||1;
+    const perPage = parseInt(request.query.perPage)||10000;
+    
+    const totalPosts= await ProductModel.countDocuments();
+    const totalPages= Math.ceil(totalPosts / perPage);
+
+    if(page > totalPages){
+      return response.status(404).json({
+        message:"Page not found",
+        success:false,
+        error:true,
+      })
+    }
+
+
+    const products = await ProductModel.find({rating:request.query.rating}).populate("category")
+    .skip((page-1)*perPage)
+    .limit(perPage)
+    .exec();
+
+    if(!products){
+      response.status(500).json({
+        error:true,
+        success:false,
+      })
+    }
+
+
+    return response.status(200).json({
+      error:false,
+      success:true,
+      products:products,
+      totalPages:totalPages,
+      page:page,
+    })
+  } catch (error) {
+    return response.status(500).json({
+      message:error.message || error,
+      error: true,
+      success: false,
+    })
+  }
+}
