@@ -524,5 +524,24 @@ export async function getAllProductByPrice(request, response){
     productList = productListArr;
     
   }
+
+  const filteredProducts = productList.filter((product)=>{
+    if(request.query.minPrice && product.price < parseInt(+request.query.minPrice)){
+      return false;
+    }
+    if(request.query.maxPrice && product.price > parseInt(+request.query.maxPrice)){
+      return false;
+    }
+    return true;
+  })
+
+  return response.status(200).json({
+    error:false,
+    success:true,
+    products:filteredProducts,
+    totalPages:0,
+    page:0,
+  })
+
 }
 
