@@ -486,3 +486,43 @@ export async function getAllProductBythirdsubCatName(request, response){
 }
 
 
+
+
+export async function getAllProductByPrice(request, response){
+  let productList = [];
+
+  if(request.query.catId !=="" && request.query.catId !== undefined){
+    const productListArr = await ProductModel.find({
+      catId: req.query.catId,
+
+    }).populate('category')
+
+    productList = productListArr;
+    
+  }
+
+
+  
+  if(request.query.subCatId !=="" && request.query.subCatId !== undefined){
+    const productListArr = await ProductModel.find({
+      subCatId: req.query.subCatId,
+
+    }).populate('category')
+
+    productList = productListArr;
+    
+  }
+
+
+
+  if(request.query.thirdsubCat !=="" && request.query.thirdsubCat !== undefined){
+    const productListArr = await ProductModel.find({
+      thirdsubCat: req.query.thirdsubCat,
+
+    }).populate('category')
+
+    productList = productListArr;
+    
+  }
+}
+
