@@ -601,7 +601,21 @@ export async function getAllProductByRating(request, response){
 
 export async function getProductCount(request, response){
   try {
-    
+    const productCount= await ProductModel.countDocuments();
+
+    if(!productCount){
+      response.status(500).json({
+        error:true,
+        success:false
+      })
+
+    }
+
+    return response.status(200).json({
+      error:false,
+      success:true,
+      productCount:productCount,
+    })
   } catch (error) {
      return response.status(500).json({
       message:error.message || error,
