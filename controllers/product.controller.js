@@ -624,3 +624,32 @@ export async function getProductCount(request, response){
     })
   }
 }
+
+
+export async function getAllFeatureProducts(request, response){
+  try {
+    const featureProduct= await ProductModel.find({
+      isFeatured:true,
+    }).populate("category");
+    
+    if(!featureProduct){
+      response.status(500).json({
+        error:true,
+        success:false
+      })
+
+    }
+
+    return response.status(200).json({
+      error:false,
+      success:true,
+      featureProduct:featureProduct,
+    })
+  } catch (error) {
+     return response.status(500).json({
+      message:error.message || error,
+      error: true,
+      success: false,
+    })
+  }
+}
