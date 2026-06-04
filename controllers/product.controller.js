@@ -566,7 +566,9 @@ export async function getAllProductByRating(request, response){
     }
 
 
-    const products = await ProductModel.find({rating:request.query.rating}).populate("category")
+    const products = await ProductModel.find({rating:request.query.rating, catId:request.query.catId, subCatId:request.query.subCatId}
+
+    ).populate("category")
     .skip((page-1)*perPage)
     .limit(perPage)
     .exec();
