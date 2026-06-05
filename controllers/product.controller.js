@@ -680,6 +680,10 @@ export async function deleteProduct(request, response) {
         })
       }
     }
+
+
+   const deletedProduct = await ProductModel.findByIdAndDelete(request.params.id);
+
   } catch (error) {
     return response.status(500).json({
       message:error.message || error,
