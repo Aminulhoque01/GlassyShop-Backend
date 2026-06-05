@@ -631,7 +631,7 @@ export async function getAllFeatureProducts(request, response){
     const featureProduct= await ProductModel.find({
       isFeatured:true,
     }).populate("category");
-    
+
     if(!featureProduct){
       response.status(500).json({
         error:true,
@@ -646,7 +646,42 @@ export async function getAllFeatureProducts(request, response){
       featureProduct:featureProduct,
     })
   } catch (error) {
-     return response.status(500).json({
+    return response.status(500).json({
+      message:error.message || error,
+      error: true,
+      success: false,
+    })
+  }
+}
+
+
+export async function deleteProduct(request, response) {
+  try {
+    const product = await ProductModel.findById(request.params.id).populate("category");
+    if(!product){
+      response.status(500).json({
+        error:true,
+        success:false,
+        message:"Product Not found"
+      })
+    }
+
+
+    const images = product.images;
+    for(img of images){
+      const imgUrl=img;
+      const urlArr= imgUrl.split("/");
+      const image = urlArr[urlArr.length-1];
+
+      const imageName= image.split(".")[0];
+      if(imageName){
+        cloudinary.uploader.destroy(imageName,(error,result)=>{
+          //
+        })
+      }
+    }
+  } catch (error) {
+    return response.status(500).json({
       message:error.message || error,
       error: true,
       success: false,
