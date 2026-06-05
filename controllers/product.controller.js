@@ -693,7 +693,7 @@ export async function deleteProduct(request, response) {
     })
    }
 
-   response.status(200).json({
+   return response.status(200).json({
     success:true,
     message:"Product Deleted"
    })
