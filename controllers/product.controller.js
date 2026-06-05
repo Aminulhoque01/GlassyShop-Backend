@@ -684,6 +684,20 @@ export async function deleteProduct(request, response) {
 
    const deletedProduct = await ProductModel.findByIdAndDelete(request.params.id);
 
+
+   if(!deletedProduct){
+    response.status(500).json({
+      message:"product not deleted",
+      error:true,
+      success:false,
+    })
+   }
+
+   response.status(200).json({
+    success:true,
+    message:"Product Deleted"
+   })
+
   } catch (error) {
     return response.status(500).json({
       message:error.message || error,
