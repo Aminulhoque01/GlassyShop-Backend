@@ -668,6 +668,8 @@ export async function deleteProduct(request, response) {
 
 
     const images = product.images;
+
+    let img="";
     for(img of images){
       const imgUrl=img;
       const urlArr= imgUrl.split("/");

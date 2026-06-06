@@ -19,7 +19,7 @@ productRouter.get('/price-filter', getAllProductByPrice);
 productRouter.get('/filter-rating', getAllProductByRating);
 productRouter.get('/product-count', getProductCount);
 productRouter.get('/feature-products', getAllFeatureProducts);
-productRouter.get('/product-delete/:id', deleteProduct);
+productRouter.delete('/product-delete/:id', deleteProduct);
 
 
 export default productRouter;
