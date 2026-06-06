@@ -1,7 +1,7 @@
 import { Router } from "express";
 import auth from "../middleware/auth.js";
 import upload from "../middleware/multer.js";
-import { createProduct, deleteProduct, getAllFeatureProducts, getAllProduct, getAllProductByCatId, getAllProductByCatName, getAllProductByPrice, getAllProductByRating, getAllProductBySubCatId, getAllProductBySubCatName, getAllProductBythirdsubCat, getAllProductBythirdsubCatName, getProductCount, getSingleProduct, removeImageFromCloudinary, uploadImages } from "../controllers/product.controller.js";
+import { createProduct, deleteProduct, getAllFeatureProducts, getAllProduct, getAllProductByCatId, getAllProductByCatName, getAllProductByPrice, getAllProductByRating, getAllProductBySubCatId, getAllProductBySubCatName, getAllProductBythirdsubCat, getAllProductBythirdsubCatName, getProductCount, getSingleProduct, removeImageFromCloudinary, updatedProduct, uploadImages } from "../controllers/product.controller.js";
 
 
 const productRouter=Router();
@@ -23,6 +23,7 @@ productRouter.delete('/product-delete/:id', deleteProduct);
 productRouter.get('/:id', getSingleProduct);
 
 categoryRouter.delete('/deleteImage', auth, removeImageFromCloudinary);
+categoryRouter.put('/update/:id', auth, updatedProduct);
 
 
 export default productRouter;

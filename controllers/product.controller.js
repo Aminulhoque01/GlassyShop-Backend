@@ -768,3 +768,57 @@ export async function removeImageFromCloudinary(request, response) {
     });
   }
 }
+
+
+export async function updatedProduct(request, response){
+  try {
+    let product = await ProductModel.findByIdAndUpdate(
+      request.params.id,
+      {
+       name: request.body.name,
+       description: request.body.description,
+       images:request.body.images,
+       brand: request.body.brand,
+       price: request.body.price,
+       oldPrice: request.body.oldPrice,
+       catName: request.body.catName,
+        
+       catId: request.body.catId,
+       subCatId: request.body.subCatId,
+       subCat: request.body.subCat,
+       subCatName: request.body.subCatName,
+       thirdsubCat: request.body.thirdsubCat,
+       thirdsubCatName: request.body.thirdsubCatName,
+       countInStock: request.body.countInStock,
+       rating: request.body.rating,
+       isFeatured: request.body.isFeatured,
+       discount: request.body.discount,
+       productRam: request.body.productRam,
+       size: request.body.size,
+       productWeight: request.body.productWeight,
+      },{new:true});
+
+   
+
+      if(!product){
+        return response.status(500).json({
+          error:true,
+          success:false,
+          message:"product not created"
+        })
+      }
+    imageArr=[];
+    return response.status(200).json({
+      message:"product successfully updated",
+      success:true,
+      error:false,
+    })
+
+  } catch (error) {
+    return response.status(500).json({
+      message: error.message,
+      error: true,
+      success: false,
+    });
+  }
+}
