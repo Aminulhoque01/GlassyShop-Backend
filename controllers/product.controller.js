@@ -712,7 +712,23 @@ export async function deleteProduct(request, response) {
 
 export async function getSingleProduct(request, response){
  try {
-  
+   const singleProduct= await ProductModel.findById(request.params.id).populate("category");
+
+   if(!singleProduct){
+    response.status(404).json({
+      message:"Product not found",
+      error:true,
+      success:false,
+    })
+   }
+   return response.status(200).json({
+    error:false,
+    success:true,
+    message:"product get successfully",
+    product:singleProduct,
+   })
+
+
  } catch (error) {
    return response.status(500).json({
       message:error.message || error,
@@ -721,3 +737,5 @@ export async function getSingleProduct(request, response){
     })
  }
 }
+
+ 
