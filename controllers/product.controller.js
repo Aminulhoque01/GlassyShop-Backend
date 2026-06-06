@@ -708,3 +708,16 @@ export async function deleteProduct(request, response) {
     })
   }
 }
+
+
+export async function getSingleProduct(request, response){
+ try {
+  
+ } catch (error) {
+   return response.status(500).json({
+      message:error.message || error,
+      error: true,
+      success: false,
+    })
+ }
+}
