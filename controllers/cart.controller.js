@@ -52,7 +52,20 @@ export const addToCartItemController= async(request, response)=>{
         })
 
     } catch (error) {
-        return response.status(500).json({
+    return response.status(500).json({
+      message: error.message,
+      error: true,
+      success: false,
+    });
+    }
+}
+
+
+export const getCartItemController= async(request, response)=>{
+    try {
+        
+    } catch (error) {
+    return response.status(500).json({
       message: error.message,
       error: true,
       success: false,
