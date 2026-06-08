@@ -63,7 +63,17 @@ export const addToCartItemController= async(request, response)=>{
 
 export const getCartItemController= async(request, response)=>{
     try {
-        
+        const userId= request.userId;
+        const cartItem = await CartProductModel.find({
+            userId:userId
+
+        }).populate("productId")
+
+        return response.status({
+            data:cartItem,
+            error:false,
+            success:true,
+        })
     } catch (error) {
     return response.status(500).json({
       message: error.message,
