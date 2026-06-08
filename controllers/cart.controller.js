@@ -69,7 +69,7 @@ export const getCartItemController= async(request, response)=>{
 
         }).populate("productId")
 
-        return response.status({
+        return response.status(200).json({
             data:cartItem,
             error:false,
             success:true,
