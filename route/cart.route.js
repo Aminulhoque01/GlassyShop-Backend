@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { addToCartItemController, getCartItemController, updateCartItemQtyController } from "../controllers/cart.controller.js";
+import { addToCartItemController, deleteItemQtyController, getCartItemController, updateCartItemQtyController } from "../controllers/cart.controller.js";
 import auth from "../middleware/auth.js";
 
  
@@ -9,5 +9,6 @@ import auth from "../middleware/auth.js";
  cartRoute.post("/add-product", auth, addToCartItemController);
  cartRoute.get("/cart", auth, getCartItemController);
  cartRoute.put("/update", auth, updateCartItemQtyController);
+ cartRoute.delete("/delete-cart-item", auth, deleteItemQtyController);
 
  export default cartRoute;
