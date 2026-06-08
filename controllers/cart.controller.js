@@ -1,6 +1,6 @@
 import { request, response } from "express";
-import CartProductModel from "../models/cartProduct.model";
-import UserModel from "../models/user.model";
+import CartProductModel from "../models/cartProduct.model.js";
+import UserModel from "../models/user.model.js";
 
 
 

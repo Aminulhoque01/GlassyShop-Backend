@@ -8,6 +8,7 @@ import connectDB from "./config/ConnectDB.js";
 import userRouter from "./route/user.route.js";
 import categoryRouter from "./route/categroy.route.js";
 import productRouter from "./route/product.route.js";
+import cartRoute from "./route/cart.route.js";
 
 dotenv.config();
 
@@ -25,6 +26,7 @@ app.get("/", (req, res) => res.json({ message: "Server is running 🚀" }));
 app.use("/api/user", userRouter);
 app.use("/api/category", categoryRouter);
 app.use("/api/product", productRouter);
+app.use("/api/cart", cartRoute);
 
 const PORT = process.env.PORT || 8080;
 const startServer = async () => {

@@ -6,6 +6,6 @@ import auth from "../middleware/auth.js";
 
  const cartRoute= Router()
 
- cartRoute.post("/add", auth, addToCartItemController);
+ cartRoute.post("/add-product", auth, addToCartItemController);
 
  export default cartRoute;

@@ -22,8 +22,8 @@ productRouter.get('/feature-products', getAllFeatureProducts);
 productRouter.delete('/product-delete/:id', deleteProduct);
 productRouter.get('/:id', getSingleProduct);
 
-categoryRouter.delete('/deleteImage', auth, removeImageFromCloudinary);
-categoryRouter.put('/update/:id', auth, updatedProduct);
+productRouter.delete('/deleteImage', auth, removeImageFromCloudinary);
+productRouter.put('/update/:id', auth, updatedProduct);
 
 
 export default productRouter;
