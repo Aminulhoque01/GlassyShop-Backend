@@ -20,6 +20,27 @@ const myListSchema = new mongoose.Schema({
  rating:{
   type:Number,
   required:true
+ },
+ brand:{
+  type:String,
+  required:true
+ },
+ price:{
+  type:Number,
+  required:true,
+ },
+ oldPrice:{
+  type:String,
+  required:true
+ },
+ discount:{
+  type:Number,
+  required:true
  }
   
+},{
+  timestamps:true
 });
+
+const MyListModel= mongoose.model('MyListProduct', myListSchema)
+export default MyListModel;
