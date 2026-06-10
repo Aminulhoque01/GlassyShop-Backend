@@ -1,3 +1,4 @@
+import { request } from "express";
 import MyListModel from "../models/myList.model.js";
 
 export const addToMyListController = async (request, response) => {
@@ -20,7 +21,7 @@ export const addToMyListController = async (request, response) => {
         productId,productTitle,image,rating,price,oldPrice,brand,discount, userId
     });
 
-    const save = await MyListModel.save();
+    const save = await myList.save();
 
     return response.status(200).json({
         error:false,
@@ -37,3 +38,34 @@ export const addToMyListController = async (request, response) => {
     });
   }
 };
+
+
+export const getMyListController= async(request, response)=>{
+  try {
+    const userId= request.userId;
+
+    const mylist = await MyListModel.find({ userId: userId,}).populate("productId");
+
+    if(!mylist){
+      return response.status(404).json({
+        error:true,
+        success:false,
+        message:"mylist not found"
+      });
+    }
+
+    return response.json({
+      error:false,
+      success:true,
+      message:"my list product get successfully",
+      data: mylist,
+    })
+
+  } catch (error) {
+     return response.status(500).json({
+      message: error.message,
+      error: true,
+      success: false,
+    });
+  }
+}
