@@ -74,10 +74,10 @@ export const deleteMyListController = async (request, response) => {
   try {
     const userId = request.userId;
     const { productId } = request.params;
-
+    console.log("params", productId)
     const deletedItem = await MyListModel.findOneAndDelete({
-      userId,
-      productId,
+      userId:userId,
+      productId:productId,
     });
 
     if (!deletedItem) {
