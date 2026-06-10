@@ -9,6 +9,7 @@ import userRouter from "./route/user.route.js";
 import categoryRouter from "./route/categroy.route.js";
 import productRouter from "./route/product.route.js";
 import cartRoute from "./route/cart.route.js";
+import myListRoute from "./route/mylist.route.js";
 
 dotenv.config();
 
@@ -27,6 +28,7 @@ app.use("/api/user", userRouter);
 app.use("/api/category", categoryRouter);
 app.use("/api/product", productRouter);
 app.use("/api/cart", cartRoute);
+app.use("/api/myList", myListRoute);
 
 const PORT = process.env.PORT || 8080;
 const startServer = async () => {
