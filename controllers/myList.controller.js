@@ -69,3 +69,35 @@ export const getMyListController= async(request, response)=>{
     });
   }
 }
+
+export const deleteMyListController = async (request, response) => {
+  try {
+    const userId = request.userId;
+    const { productId } = request.params;
+
+    const deletedItem = await MyListModel.findOneAndDelete({
+      userId,
+      productId,
+    });
+
+    if (!deletedItem) {
+      return response.status(404).json({
+        error: true,
+        success: false,
+        message: "Product not found in my list",
+      });
+    }
+
+    return response.status(200).json({
+      error: false,
+      success: true,
+      message: "Product removed from my list successfully",
+    });
+  } catch (error) {
+    return response.status(500).json({
+      message: error.message,
+      error: true,
+      success: false,
+    });
+  }
+};
