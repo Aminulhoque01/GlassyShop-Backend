@@ -678,7 +678,7 @@ export async function deleteProduct(request, response) {
       const imageName= image.split(".")[0];
       if(imageName){
         cloudinary.uploader.destroy(imageName,(error,result)=>{
-          //
+          //image reomve
         })
       }
     }
