@@ -194,7 +194,12 @@ export async function loginUserController(request, response) {
 
 export async function logoutController(request, response) {
   try {
+  
     const userid = request.userId;
+     if (!userid) {
+      console.log("Unauthorized - userId missing")
+     };
+
     const cookiesOption = {
       httpOnly: true,
       secure: true,
