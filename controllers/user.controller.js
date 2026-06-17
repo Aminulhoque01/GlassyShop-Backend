@@ -61,7 +61,7 @@ export async function registerUserController(req, res) {
     );
 
     const token = jwt.sign(
-      { email: user.email, id: user._id },
+      { email:user.email, id:user._id },
       process.env.JSON_WEB_TOKEN_SECRET_KEY,
       { expiresIn: "7d" },
     );
