@@ -561,8 +561,8 @@ export async function verifyForgotPasswordOtp(request, response) {
 
     return response.status(200).json({
       message: "verify otp successfully",
-      error: true,
-      success: false,
+      error: false,
+      success: true,
     });
 
   } catch (error) {
