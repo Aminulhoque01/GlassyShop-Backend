@@ -1,5 +1,5 @@
 import { request, response } from "express";
-import AddressModel from "../models/address.model";
+import AddressModel from "../models/address.model.js";
 
 export const addAddressController = async (request, response) => {
   try {
