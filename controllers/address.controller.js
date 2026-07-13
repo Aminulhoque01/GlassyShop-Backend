@@ -1,7 +1,10 @@
 import { request, response } from "express";
+import AddressModel from "../models/address.model";
 
 export const addAddressController = async (request, response) => {
   try {
+
+    const userId= request.userId;
     const {
       address_line,
       city,
@@ -10,7 +13,7 @@ export const addAddressController = async (request, response) => {
       country,
       mobile,
       status,
-      userId,
+       
     } = request.body;
 
     if (
@@ -19,8 +22,8 @@ export const addAddressController = async (request, response) => {
       state ||
       pinCode ||
       country ||
-      mobile ||
-      userId
+      mobile 
+       
     ) {
       return response.status(500).json({
       message:"Please provide all the fields",
@@ -28,6 +31,32 @@ export const addAddressController = async (request, response) => {
       success: false,
     });
     }
+   
+    const address= new AddressModel.find({
+      address_line,
+      city,
+      state,
+      pinCode,
+      country,
+      mobile,
+      status,
+      userId
+    })
+    const saveAddress= await address.save();
+
+    const updateCartUser= await UserModel.updateOne({_id:userId},{
+      $push:{
+        address_details: saveAddress?._id,
+      }
+    });
+
+    return response.status(200).json({
+      data:saveAddress,
+      message:"address save successfully",
+      error:false,
+      success:true,
+    })
+
   } catch (error) {
     return response.status(500).json({
       message: error.message,
