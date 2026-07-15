@@ -1,67 +1,72 @@
-import { request, response } from "express";
 import AddressModel from "../models/address.model.js";
+import UserModel from "../models/user.model.js";
 
 export const addAddressController = async (request, response) => {
   try {
+    const userId = request.userId;
 
-    const userId= request.userId;
     const {
-      address_line,
+      address_line1,
       city,
       state,
       pinCode,
       country,
       mobile,
       status,
-       
     } = request.body;
 
+    console.log("userId =", userId);
+    console.log("body =", request.body);
     if (
-      address_line ||
-      city ||
-      state ||
-      pinCode ||
-      country ||
-      mobile 
-       
+      !address_line1 ||
+      !city ||
+      !state ||
+      !pinCode ||
+      !country ||
+      !mobile
     ) {
-      return response.status(500).json({
-      message:"Please provide all the fields",
-      error: true,
-      success: false,
-    });
+      return response.status(400).json({
+        message: "Please provide all fields",
+        success: false,
+        error: true,
+      });
     }
-   
-    const address= new AddressModel.find({
-      address_line,
+
+    const address = new AddressModel({
+      address_line1,
       city,
       state,
       pinCode,
       country,
       mobile,
       status,
-      userId
-    })
-    const saveAddress= await address.save();
-
-    const updateCartUser= await UserModel.updateOne({_id:userId},{
-      $push:{
-        address_details: saveAddress?._id,
-      }
+      userId,
     });
 
-    return response.status(200).json({
-      data:saveAddress,
-      message:"address save successfully",
-      error:false,
-      success:true,
-    })
+    const saveAddress = await address.save();
 
+    await UserModel.updateOne(
+      { _id: userId },
+      {
+        $push: {
+          address_details: saveAddress._id,
+        },
+      }
+    );
+
+    return response.status(201).json({
+      data: saveAddress,
+      message: "Address saved successfully",
+      success: true,
+      error: false,
+    });
   } catch (error) {
+    console.log(error);
+
     return response.status(500).json({
       message: error.message,
-      error: true,
       success: false,
+      error: true,
     });
   }
 };
