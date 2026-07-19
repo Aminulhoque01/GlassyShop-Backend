@@ -6,26 +6,12 @@ export const addAddressController = async (request, response) => {
   try {
     const userId = request.userId;
 
-    const {
-      address_line1,
-      city,
-      state,
-      pinCode,
-      country,
-      mobile,
-      status,
-    } = request.body;
+    const { address_line1, city, state, pinCode, country, mobile, status } =
+      request.body;
 
     console.log("userId =", userId);
     console.log("body =", request.body);
-    if (
-      !address_line1 ||
-      !city ||
-      !state ||
-      !pinCode ||
-      !country ||
-      !mobile
-    ) {
+    if (!address_line1 || !city || !state || !pinCode || !country || !mobile) {
       return response.status(400).json({
         message: "Please provide all fields",
         success: false,
@@ -52,7 +38,7 @@ export const addAddressController = async (request, response) => {
         $push: {
           address_details: saveAddress._id,
         },
-      }
+      },
     );
 
     return response.status(201).json({
@@ -72,17 +58,22 @@ export const addAddressController = async (request, response) => {
   }
 };
 
-
-export const getAddress= async(request, response)=>{
+export const getAddress = async (request, response) => {
   try {
-    const address = await AddressModel.find({userId:request?.query?.userId})
-    if(!address){
+    const address = await AddressModel.find({ userId: request?.query?.userId });
+    if (!address) {
       return response.status({
-        error:true,
-        success:false,
-        msg:"address not found"
-      })
+        error: true,
+        success: false,
+        message: "address not found",
+      });
     }
+    return response.status({
+      error: false,
+      success: true,
+      data:address
+    });
+
 
   } catch (error) {
     return response.status(500).json({
@@ -91,4 +82,4 @@ export const getAddress= async(request, response)=>{
       error: true,
     });
   }
-}
+};
