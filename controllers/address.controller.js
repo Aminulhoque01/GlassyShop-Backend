@@ -1,3 +1,4 @@
+import { response } from "express";
 import AddressModel from "../models/address.model.js";
 import UserModel from "../models/user.model.js";
 
@@ -70,3 +71,16 @@ export const addAddressController = async (request, response) => {
     });
   }
 };
+
+
+export const getAddress= async(request, response)=>{
+  try {
+    
+  } catch (error) {
+    return response.status(500).json({
+      message: error.message,
+      success: false,
+      error: true,
+    });
+  }
+}
