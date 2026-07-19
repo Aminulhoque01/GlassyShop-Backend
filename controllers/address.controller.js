@@ -75,7 +75,15 @@ export const addAddressController = async (request, response) => {
 
 export const getAddress= async(request, response)=>{
   try {
-    
+    const address = await AddressModel.find({userId:request?.query?.userId})
+    if(!address){
+      return response.status({
+        error:true,
+        success:false,
+        msg:"address not found"
+      })
+    }
+
   } catch (error) {
     return response.status(500).json({
       message: error.message,
