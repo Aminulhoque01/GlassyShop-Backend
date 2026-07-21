@@ -5,7 +5,7 @@ import { addAddressController, getAddress } from "../controllers/address.control
  const addressRoute= Router();
 
  addressRoute.post("/add", auth,addAddressController);
- addressRoute.get("/", auth,getAddress);
+ addressRoute.get("/get-address", auth,getAddress);
 
  export default addressRoute;
 

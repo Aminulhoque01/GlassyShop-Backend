@@ -68,14 +68,13 @@ export const getAddress = async (request, response) => {
         message: "address not found",
       });
     }
-    return response.status({
+    return response.status(200).json({
       error: false,
       success: true,
-      data:address
+      data: address,
     });
-
-
   } catch (error) {
+    console.log(error);
     return response.status(500).json({
       message: error.message,
       success: false,
