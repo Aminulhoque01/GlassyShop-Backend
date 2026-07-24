@@ -82,3 +82,15 @@ export const getAddress = async (request, response) => {
     });
   }
 };
+
+export const selectAddressController= async(request, response)=>{
+  try {
+    
+  } catch (error) {
+    return response.status(500).json({
+      message: error.message,
+      success: false,
+      error: true,
+    });
+  }
+}
