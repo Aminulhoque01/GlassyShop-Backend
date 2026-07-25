@@ -85,7 +85,7 @@ export const getAddress = async (request, response) => {
 
 export const selectAddressController = async (request, response) => {
   try {
-    const userId = request.params._id;
+    const userId = request.params.id;
 
     const address = await AddressModel.find({
       userId: request.params.id,
