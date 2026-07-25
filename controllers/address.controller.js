@@ -97,16 +97,29 @@ export const selectAddressController = async (request, response) => {
         success: false,
         error: true,
       });
-    }else{
-      return response.status(500).json({
-        
-        success: true,
-        error: false,
-        data:address
-      });
+    } else {
+      const updateAddress = await AddressModel.findByIdAndUpdate(
+        request.params.id,
+        {
+          selected: request?.body?.selected,
+         
+        },
+        {
+          new: true,
+        },
+
+
+      
+      );
+
+
+        return response.json({
+          message: "address Updated successfully",
+          error: false,
+          success: true,
+          address:updateAddress
+        });
     }
-
-
   } catch (error) {
     return response.status(500).json({
       message: error.message,
