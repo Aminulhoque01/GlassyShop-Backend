@@ -85,6 +85,11 @@ export const getAddress = async (request, response) => {
 
 export const selectAddressController= async(request, response)=>{
   try {
+    const userId = request.params._id
+
+    const address= await AddressModel.find({
+      userId:request.params.id
+    })
     
   } catch (error) {
     return response.status(500).json({
