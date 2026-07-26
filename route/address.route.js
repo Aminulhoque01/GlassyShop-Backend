@@ -6,7 +6,7 @@ import { addAddressController, getAddress, selectAddressController } from "../co
 
  addressRoute.post("/add", auth,addAddressController);
  addressRoute.get("/get-address", auth,getAddress);
- addressRoute.get("/:id", auth, selectAddressController);
+ addressRoute.put("/:id", auth, selectAddressController);
 
  export default addressRoute;
 
