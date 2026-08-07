@@ -128,3 +128,15 @@ export const selectAddressController = async (request, response) => {
     });
   }
 };
+
+
+export const deleteAddress = async (req, res) => {
+  const { id } = req.params;
+
+  await AddressModel.findByIdAndDelete(id);
+
+  res.status(200).json({
+    success: true,
+    message: "Address deleted successfully",
+  });
+};
