@@ -5,7 +5,7 @@ import upload from "../middleware/multer.js";
 
 const categoryRouter = Router();
 
-categoryRouter.post("/create", upload.array("images", 5), categoryCreateController);
+categoryRouter.post("/upload-category-img", upload.array("images", 5), categoryCreateController);
 categoryRouter.post("/create-sub", createCategory);
 categoryRouter.get("/all", auth, getAllCategory);
 categoryRouter.get("/category-count", auth, getCategoryCount);
