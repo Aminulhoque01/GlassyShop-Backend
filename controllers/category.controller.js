@@ -11,60 +11,66 @@ cloudinary.config({
   secure: true,
 });
 
-export async function categoryCreateController(request, response) {
+export const categoryCreateController = async (req, res) => {
   try {
+    const { name, parentId, parentCatName } = req.body;
 
-   let imagesArr = [];
-  const images = request.files;
+    if (!name) {
+      return res.status(400).json({
+        message: "Category name is required",
+        success: false,
+        error: true,
+      });
+    }
 
-   const options={
-    use_filename:true,
-    unique_filename:false,
-    overwrite:false,
-   }
-   
-    for (let i = 0; i < images.length; i++) {
-      const result = await cloudinary.uploader.upload(images[i].path, options,
-        function (error, result){
-          imagesArr.push(result.secure_url);
-          fs.unlinkSync(`uploads/${request.files[i].filename}`)
-        }
-      );
+    if (!req.files || req.files.length === 0) {
+      return res.status(400).json({
+        message: "Please upload at least one image",
+        success: false,
+        error: true,
+      });
+    }
 
-      
-    };
+    const imagesArr = [];
 
-      let category=new CategoryModel({
-        name:request.body.name,
-        images:imagesArr,
-        parentId:request.body.parentId,
-        parentCatName:request.body.parentCatName,
+    for (const file of req.files) {
+      const result = await cloudinary.uploader.upload(file.path, {
+        use_filename: true,
+        unique_filename: false,
+        overwrite: false,
       });
 
-       if(!category){
-        return response.status(500).json({
-          message:"Category not found",
-          error:true,
-          success:false
-        })
+      imagesArr.push(result.secure_url);
+
+      // Local uploaded file delete
+      if (fs.existsSync(file.path)) {
+        fs.unlinkSync(file.path);
       }
-     category=await category.save();
-      imagesArr=[];
+    }
 
-    return response.status(200).json({
-      category:category
-    })
+    const category = await CategoryModel.create({
+      name,
+      images: imagesArr,
+      parentId: parentId || null,
+      parentCatName: parentCatName || "",
+    });
 
-     
-
+    return res.status(201).json({
+      message: "Category created successfully",
+      success: true,
+      error: false,
+      category,
+    });
   } catch (error) {
-    return response.status(500).json({
+    console.error("Category Create Error:", error);
+
+    return res.status(500).json({
       message: error.message,
-      error: true,
       success: false,
+      error: true,
     });
   }
-}
+};
 
 export async function createCategory(request, response){
     try {
