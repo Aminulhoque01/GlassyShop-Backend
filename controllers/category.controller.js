@@ -269,63 +269,185 @@ export async function removeImageFromCloudinary(request, response) {
 
  
 
-export async function deleteCategory(request, response){
-  try {
-    const category = CategoryModel.findById(request.params.id)
-    const images = category.images;
+// export async function deleteCategory(request, response){
+//   try {
+//     const category = CategoryModel.findById(request.params.id)
+//     const images = category.images;
 
-    for(img of images){
-      const imgUrl=img;
-      const urlArr=imgUrl.split("/");
-      const image = urlArr[urlArr.length-1];
+//     for(img of images){
+//       const imgUrl=img;
+//       const urlArr=imgUrl.split("/");
+//       const image = urlArr[urlArr.length-1];
 
-      const imageName= image.split(".")[0];
-      if(imageName){
-         cloudinary.uploader.destroy(imageName,(error, result)=>{
-          console.log(error, result)
-        })
-      }
+//       const imageName= image.split(".")[0];
+//       if(imageName){
+//          cloudinary.uploader.destroy(imageName,(error, result)=>{
+//           console.log(error, result)
+//         })
+//       }
       
-      const subCategory= await CategoryModel.find({parentId:req.params.id})
+//       const subCategory= await CategoryModel.find({parentId:request.params.id})
 
-      for(let i =0; i<subCategory.length;i++){
-        console.log(subCategory[i]._id);
+//       for(let i =0; i<subCategory.length;i++){
+//         console.log(subCategory[i]._id);
+//       }
+
+//       const thirdsubCategory=await CategoryModel.find({
+//         parentId:subCategory[i]._id
+//       });
+
+//       for(let i =0; i<thirdsubCategory.length;i++){
+//         const deletedThirdSubCat= await CategoryModel.findByIdAndDelete(thirdsubCategory[i]._id);
+//       }
+
+//       const deletedSubCat=await CategoryModel.findByIdAndDelete(subCategory[i]._id)
+
+//       if(!deletedSubCat){
+//         response.status(404).json({
+//           message:"Category not found",
+//           success:false
+//         })
+//       }
+
+
+//       response.status(200).json({
+//         success:true,
+//         message:"Category Deleted!",
+//         success:true
+//       })
+
+//     }
+//   } catch (error) {
+//     return response.status(500).json({
+//       message: "Category deleted!",
+//       error: false,
+//       success: true,
+//     });
+//   }
+// }
+
+
+export async function deleteCategory(request, response) {
+  try {
+    const categoryId = request.params.id;
+
+    // 1. Main category find
+    const category = await CategoryModel.findById(categoryId);
+
+    if (!category) {
+      return response.status(404).json({
+        success: false,
+        error: true,
+        message: "Category not found",
+      });
+    }
+
+    // ==========================================
+    // 2. Delete main category images from Cloudinary
+    // ==========================================
+
+    if (category.images && category.images.length > 0) {
+      for (const imgUrl of category.images) {
+        const urlArr = imgUrl.split("/");
+        const image = urlArr[urlArr.length - 1];
+
+        const imageName = image.split(".")[0];
+
+        if (imageName) {
+          try {
+            const result = await cloudinary.uploader.destroy(
+              imageName
+            );
+
+            console.log("Cloudinary deleted:", result);
+          } catch (error) {
+            console.log(
+              "Cloudinary delete error:",
+              error.message
+            );
+          }
+        }
       }
+    }
 
-      const thirdsubCategory=await CategoryModel.find({
-        parentId:subCategory[i]._id
+    // ==========================================
+    // 3. Find sub categories
+    // ==========================================
+
+    const subCategories = await CategoryModel.find({
+      parentId: categoryId,
+    });
+
+    // ==========================================
+    // 4. Delete sub categories + third level
+    // ==========================================
+
+    for (const subCategory of subCategories) {
+      const subCategoryId = subCategory._id;
+
+      // -----------------------------
+      // Find third level categories
+      // -----------------------------
+
+      const thirdSubCategories = await CategoryModel.find({
+        parentId: subCategoryId,
       });
 
-      for(let i =0; i<thirdsubCategory.length;i++){
-        const deletedThirdSubCat= await CategoryModel.findByIdAndDelete(thirdsubCategory[i]._id);
+      // -----------------------------
+      // Delete third level
+      // -----------------------------
+
+      for (const thirdCategory of thirdSubCategories) {
+        await CategoryModel.findByIdAndDelete(
+          thirdCategory._id
+        );
+
+        console.log(
+          "Deleted third category:",
+          thirdCategory._id
+        );
       }
 
-      const deletedSubCat=await CategoryModel.findByIdAndDelete(subCategory[i]._id)
+      // -----------------------------
+      // Delete sub category
+      // -----------------------------
 
-      if(!deletedSubCat){
-        response.status(404).json({
-          message:"Category not found",
-          success:false
-        })
-      }
+      await CategoryModel.findByIdAndDelete(
+        subCategoryId
+      );
 
-
-      response.status(200).json({
-        success:true,
-        message:"Category Deleted!",
-        success:true
-      })
-
+      console.log(
+        "Deleted sub category:",
+        subCategoryId
+      );
     }
-  } catch (error) {
-    return response.status(500).json({
-      message: "Category deleted!",
-      error: false,
+
+    // ==========================================
+    // 5. Finally delete main category
+    // ==========================================
+
+    await CategoryModel.findByIdAndDelete(categoryId);
+
+    // ==========================================
+    // 6. Send ONE response
+    // ==========================================
+
+    return response.status(200).json({
       success: true,
+      error: false,
+      message: "Category deleted successfully!",
+    });
+
+  } catch (error) {
+    console.log("Delete category error:", error);
+
+    return response.status(500).json({
+      success: false,
+      error: true,
+      message: error.message,
     });
   }
 }
-
 
 export async function updatedCategory(request, response){
   try {
