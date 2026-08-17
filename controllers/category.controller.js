@@ -72,42 +72,43 @@ export const categoryCreateController = async (req, res) => {
   }
 };
 
-export async function createCategory(request, response){
-    try {
-      
-      let category=new CategoryModel({
-        name:request.body.name,
-        images:imagesArr,
-        parentId:request.body.parentId,
-        parentCatName:request.body.parentCatName,
+export async function createCategory(request, response) {
+  try {
+    const { name, parentId, parentCatName } = request.body;
+
+    if (!name) {
+      return response.status(400).json({
+        message: "Category name is required",
+        error: true,
+        success: false,
       });
+    }
 
-      if(!category){
-        return response.status(500).json({
-          message:"Category not found",
-          error:true,
-          success:false
-        })
-      }
+    const category = new CategoryModel({
+      name,
+      images: [],
+      parentId: parentId || null,
+      parentCatName: parentCatName || "",
+    });
 
-      category=await category.save();
-      imagesArr=[];
+    const savedCategory = await category.save();
 
-      response.status(500).json({
-        message:"Category not created",
-        error:true,
-        success:false,
-        category:category
-      })
+    return response.status(201).json({
+      message: "Category created successfully",
+      error: false,
+      success: true,
+      category: savedCategory,
+    });
 
+  } catch (error) {
+    console.log("Create category error:", error);
 
-    } catch (error) {
-      return response.status(500).json({
+    return response.status(500).json({
       message: error.message,
       error: true,
       success: false,
     });
-    }
+  }
 }
 
 
